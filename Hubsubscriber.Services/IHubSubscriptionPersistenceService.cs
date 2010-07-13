@@ -9,8 +9,6 @@ namespace HubSubscriber.Services
 
         IEnumerable<SubscriptionModel> GetSubscriptionsList();
 
-        void MarkSubscriptionPendingDeletionById(int id);
-
         void DeleteSubscriptionById(int id);
 
         int GetSubscriptionCountById(int id);

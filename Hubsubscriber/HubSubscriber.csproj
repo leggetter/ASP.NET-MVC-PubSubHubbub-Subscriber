@@ -58,7 +58,7 @@
       <HintPath>..\libs\Castle-Windsor\Castle-Windsor-2.1.1\bin\net-3.5\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Elmah">
-      <HintPath>..\..\..\..\thirdPartyLibraries\ELMAH-1.1-bin\bin\net-3.5\Release\Elmah.dll</HintPath>
+      <HintPath>..\libs\ELMAH-1.1-bin\bin\net-3.5\Release\Elmah.dll</HintPath>
     </Reference>
     <Reference Include="Kwwika.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -108,10 +108,12 @@ namespace HubSubscriber.Kwwika
 
             _loggingService.Info("Deleting subscription Id: " + id);
 
-            Subscription sub = null;
             try
             {                
-                _subscriptionPersistenceService.MarkSubscriptionPendingDeletionById(id);
+                SubscriptionModel sub = _subscriptionPersistenceService.GetSubscriptionById(id);
+                sub.PendingDeletion = true;
+                sub.LastUpdated = DateTime.Now;
+                _subscriptionPersistenceService.SaveChanges(sub);
 
                 var model = new SubscriptionModel();
                 model.Id = sub.Id;
@@ -297,7 +299,7 @@ namespace HubSubscriber.Kwwika
 
         private HttpWebResponse GetSubscriptionResponse(SubscriptionModel model)
         {
-            UriBuilder builder = new UriBuilder("http://superfeedr.com/hubbub");
+            UriBuilder builder = new UriBuilder(Config.HubRootUrl);
 
             string query = "hub.mode=" + model.Mode + "&";
             query += "hub.verify=" + model.Verify + "&";
@@ -306,7 +308,7 @@ namespace HubSubscriber.Kwwika
             builder.Query = query;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(builder.Uri);
-            byte[] authBytes = Encoding.UTF8.GetBytes("leggetter:cResweF7".ToCharArray());
+            byte[] authBytes = Encoding.UTF8.GetBytes((Config.HubUsername + ":" + Config.HubPassword).ToCharArray());
             request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(authBytes);
 
             request.Method = "POST";

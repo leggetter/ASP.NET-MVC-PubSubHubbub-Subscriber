@@ -48,14 +48,6 @@ namespace HubSubscriber.Kwwika
             return subscriptionModels;
         }
 
-        public void MarkSubscriptionPendingDeletionById(int id)
-        {
-            Subscription sub = _entities.SubscriptionsSet.First(m => m.Id == id);
-            sub.PendingDeletion = true;
-            sub.LastUpdated = DateTime.Now;
-            _entities.SaveChanges();
-        }
-
         public void DeleteSubscriptionById(int id)
         {
             Subscription sub = _entities.SubscriptionsSet.First(m => m.Id == id);
