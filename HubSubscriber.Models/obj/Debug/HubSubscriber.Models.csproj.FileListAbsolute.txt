@@ -1,0 +1,5 @@
+D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\HubSubscriber.Models\bin\Debug\HubSubscriber.Models.dll
+D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\HubSubscriber.Models\bin\Debug\HubSubscriber.Models.pdb
+D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\HubSubscriber.Models\obj\Debug\ResolveAssemblyReference.cache
+D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\HubSubscriber.Models\obj\Debug\HubSubscriber.Models.dll
+D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\HubSubscriber.Models\obj\Debug\HubSubscriber.Models.pdb

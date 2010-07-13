@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HubSubscriber.Models" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="HubSubscriberEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="HubSubscriptionSet" EntityType="HubSubscriber.Models.Subscription" />
+  </EntityContainer>
+  <EntityType Name="Subscription">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Mode" Type="String" Nullable="false" MaxLength="11" Unicode="false" FixedLength="false" />
+    <Property Name="Verify" Type="String" Nullable="false" MaxLength="5" Unicode="false" FixedLength="false" />
+    <Property Name="Topic" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="Callback" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="Digest" Type="Boolean" Nullable="false" />
+    <Property Type="String" Name="Hub" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="Verified" Nullable="false" />
+    <Property Type="DateTime" Name="LastUpdated" />
+    <Property Type="Boolean" Name="PendingDeletion" Nullable="false" />
+  </EntityType>
+</Schema>

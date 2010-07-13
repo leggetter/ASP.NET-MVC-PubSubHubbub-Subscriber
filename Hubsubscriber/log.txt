@@ -1,0 +1,41 @@
+2010-07-01 04:38:13.2406|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:38:14.7997|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:38:35.4299|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:38:35.4299|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:38:59.3413|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:38:59.3413|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:41:10.4798|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:41:10.4798|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:42:07.1660|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:42:07.1790|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:44:37.3926|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:44:37.3926|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 04:45:21.9722|INFO|Hubsubscriber|Getting message queue
+2010-07-01 04:45:21.9722|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:08:13.0777|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:08:13.2667|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:09:08.1908|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:09:08.1908|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:10:53.0658|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:10:53.0658|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:10:57.4981|INFO|Hubsubscriber|Deleting subscription Id: 14
+2010-07-01 23:11:15.2631|INFO|Hubsubscriber|Making request to hub for subscription: http://superfeedr.com/hubbub?hub.mode=unsubscribe&hub.verify=sync&hub.callback=http://localhost:19669/HubSubscription/HubDelete/14&hub.topic=http://feeds.feedburner.com/PhilLeggettersBlog/
+2010-07-01 23:11:43.0657|ERROR|Hubsubscriber|An exception in Delete method since the hub did not believe the subscription to exist. Deleted anyway.
+2010-07-01 23:12:01.3547|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:12:01.3547|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:12:05.5339|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:12:05.5339|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:12:09.4972|INFO|Hubsubscriber|Getting message queue
+2010-07-01 23:12:09.4972|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-01 23:12:09.5492|INFO|Hubsubscriber|Creating subscription for Hubsubscriber.Models.SubscriptionModel
+Model valid: True
+2010-07-01 23:12:09.5642|INFO|Hubsubscriber|Saving model to the database Hubsubscriber.Models.SubscriptionModel
+2010-07-01 23:12:13.3354|INFO|Hubsubscriber|Making request to hub for subscription: http://superfeedr.com/hubbub?hub.mode=subscribe&hub.verify=sync&hub.callback=http://localhost:19669/HubSubscription/HubUpdate/15&hub.topic=http://feeds.feedburner.com/PhilLeggettersBlog/
+2010-07-01 23:12:13.8644|ERROR|Hubsubscriber|An exception occurred in Create method: System.Net.WebException: The remote server returned an error: (502) Bad Gateway.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Hubsubscriber.Controllers.HubSubscriptionController.GetSubscriptionResponse(SubscriptionModel model) in D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\Hubsubscriber\Controllers\HubSubscriptionController.cs:line 356
+   at Hubsubscriber.Controllers.HubSubscriptionController.Create(SubscriptionModel model) in D:\Development\Caplin\p4\Cloud\dotnet\DataSources\Superfeedr\Hubsubscriber\Controllers\HubSubscriptionController.cs:line 95
+2010-07-02 00:41:58.5024|INFO|Hubsubscriber|Getting message queue
+2010-07-02 00:41:58.5104|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.
+2010-07-02 00:42:36.4986|INFO|Hubsubscriber|Getting message queue
+2010-07-02 00:42:36.5116|INFO|Hubsubscriber|MessageQueue already exists. Reusing the existing queue.

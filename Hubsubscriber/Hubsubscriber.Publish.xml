@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="d:\upload\hubsubscriber_2010-07-08_0943" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/Kwwika.Library.Common.pdb" publishTime="07/05/2010 21:41:37" />
+    <file relUrl="bin/System.Data.SQLite.dll" publishTime="08/18/2009 07:27:36" />
+    <file relUrl="Scripts/MicrosoftAjax.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Global.asax" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Views/HubSubscription/EchoChallenge.aspx" publishTime="07/01/2010 00:50:28" />
+    <file relUrl="Web.config" publishTime="07/05/2010 21:58:33" />
+    <file relUrl="Scripts/jquery-1.4.1.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Scripts/MicrosoftMvcAjax.debug.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Scripts/MicrosoftMvcValidation.debug.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/Elmah.xml" publishTime="08/18/2009 07:27:36" />
+    <file relUrl="Scripts/MicrosoftAjax.debug.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/NLog.pdb" publishTime="06/12/2010 10:59:14" />
+    <file relUrl="bin/Kwwika.QueueComponents.dll" publishTime="07/05/2010 21:41:38" />
+    <file relUrl="bin/Elmah.dll" publishTime="08/18/2009 07:27:34" />
+    <file relUrl="bin/Kwwika.Library.Common.dll" publishTime="07/05/2010 21:41:37" />
+    <file relUrl="ElmahLogs/placeholder.txt" publishTime="07/05/2010 21:40:55" />
+    <file relUrl="Scripts/jquery.validate.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/Kwwika.QueueComponents.pdb" publishTime="07/05/2010 21:41:38" />
+    <file relUrl="bin/Kwwika.Common.pdb" publishTime="07/05/2010 21:41:37" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/VistaDB.NET20.dll" publishTime="08/18/2009 07:27:36" />
+    <file relUrl="Views/HubSubscription/HubUpdate.aspx" publishTime="07/01/2010 02:54:17" />
+    <file relUrl="Scripts/jquery.validate.min.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/Elmah.pdb" publishTime="08/18/2009 07:27:36" />
+    <file relUrl="Views/Shared/Site.Master" publishTime="07/01/2010 23:03:59" />
+    <file relUrl="bin/Hubsubscriber.dll" publishTime="07/08/2010 09:43:38" />
+    <file relUrl="bin/NLog.xml" publishTime="06/12/2010 10:59:14" />
+    <file relUrl="bin/Hubsubscriber.pdb" publishTime="07/08/2010 09:43:38" />
+    <file relUrl="Views/HubSubscription/Create.aspx" publishTime="07/01/2010 23:04:17" />
+    <file relUrl="Views/HubSubscription/Index.aspx" publishTime="07/01/2010 23:04:43" />
+    <file relUrl="Scripts/MicrosoftMvcAjax.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Content/Site.css" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="bin/Kwwika.dll" publishTime="07/05/2010 01:59:28" />
+    <file relUrl="bin/Kwwika.Common.dll" publishTime="07/05/2010 21:41:37" />
+    <file relUrl="bin/NLog.dll" publishTime="06/12/2010 10:59:14" />
+    <file relUrl="Scripts/MicrosoftMvcValidation.js" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Views/Web.config" publishTime="06/30/2010 15:43:39" />
+    <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="06/30/2010 15:43:39" />
+  </publishProfile>
+</publishData>

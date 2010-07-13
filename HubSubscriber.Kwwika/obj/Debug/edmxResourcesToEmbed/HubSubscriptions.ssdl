@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HubSubscriber.Kwwika.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="HubSubscriberKwwikaStoreContainer">
+    <EntitySet Name="hubsubscriber_Subscriptions" EntityType="HubSubscriber.Kwwika.Store.hubsubscriber_Subscriptions" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="hubsubscriber_Subscriptions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Mode" Type="varchar" Nullable="false" MaxLength="11" />
+    <Property Name="Verify" Type="varchar" Nullable="false" MaxLength="5" />
+    <Property Name="Topic" Type="nvarchar" Nullable="false" MaxLength="300" />
+    <Property Name="Callback" Type="nvarchar" Nullable="false" MaxLength="300" />
+    <Property Name="Digest" Type="bit" Nullable="false" />
+    <Property Name="Hub" Type="nvarchar" MaxLength="300" />
+    <Property Name="Verified" Type="bit" Nullable="false" />
+    <Property Name="LastUpdated" Type="smalldatetime" />
+    <Property Name="PendingDeletion" Type="bit" Nullable="false" />
+  </EntityType>
+</Schema>

@@ -1,0 +1,2 @@
+2010-07-05 21:30:09.7822 Hubsubscriber Getting message queue
+2010-07-05 21:30:11.2703 Hubsubscriber MessageQueue already exists. Reusing the existing queue.
