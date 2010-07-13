@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kwwika.Common">
+      <HintPath>..\libs\Kwwika\Kwwika.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Kwwika.QueueComponents">
+      <HintPath>..\libs\Kwwika\Kwwika.QueueComponents.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -56,14 +62,6 @@
     <Compile Include="XPathValueExtractorService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Kwwika.Common\Kwwika.Common.csproj">
-      <Project>{78112F25-A0EE-4A68-B9D2-4F6F11B6F629}</Project>
-      <Name>Kwwika.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Kwwika.QueueComponents\Kwwika.QueueComponents.csproj">
-      <Project>{D811DEF0-4CE6-4C10-88CC-B671591686BB}</Project>
-      <Name>Kwwika.QueueComponents</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HubSubscriber.Models\HubSubscriber.Models.csproj">
       <Project>{4DDE5723-5BFF-4093-BAEA-35EC1EEF2CB8}</Project>
       <Name>HubSubscriber.Models</Name>

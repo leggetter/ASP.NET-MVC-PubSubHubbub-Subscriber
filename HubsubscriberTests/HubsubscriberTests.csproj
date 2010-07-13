@@ -14,10 +14,14 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,11 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kwwika.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Kwwika\Kwwika.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\thirdPartyLibraries\NLog2.netfx40-2010.06.12.001\NLog.dll</HintPath>
+      <HintPath>..\libs\NLog2.netfx40-2010.06.12.001\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -78,33 +86,13 @@
     <Compile Include="XPathValueExtractorServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Kwwika.Common\Kwwika.Common.csproj">
-      <Project>{78112F25-A0EE-4A68-B9D2-4F6F11B6F629}</Project>
-      <Name>Kwwika.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Kwwika.Library.Common\Kwwika.Library.Common.csproj">
-      <Project>{4FD02D27-81FB-4710-992B-A17BBB33579E}</Project>
-      <Name>Kwwika.Library.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Kwwika.QueueComponents\Kwwika.QueueComponents.csproj">
-      <Project>{D811DEF0-4CE6-4C10-88CC-B671591686BB}</Project>
-      <Name>Kwwika.QueueComponents</Name>
-    </ProjectReference>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\HubSubscriber.Kwwika\HubSubscriber.Kwwika.csproj">
       <Project>{5DD7D6B3-2C95-4B42-AF5C-DC23E621CD43}</Project>
       <Name>HubSubscriber.Kwwika</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HubSubscriber.Models\HubSubscriber.Models.csproj">
-      <Project>{4DDE5723-5BFF-4093-BAEA-35EC1EEF2CB8}</Project>
-      <Name>HubSubscriber.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hubsubscriber.Services\HubSubscriber.Services.csproj">
-      <Project>{D65EA7FB-279E-46F3-AA48-634B1BFA3D8E}</Project>
-      <Name>HubSubscriber.Services</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
