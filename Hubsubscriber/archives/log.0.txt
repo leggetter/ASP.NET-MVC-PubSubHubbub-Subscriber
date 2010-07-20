@@ -1,4 +1,0 @@
-2010-07-06 18:05:16.8267 Hubsubscriber Getting message queue
-2010-07-06 18:05:17.9828 Hubsubscriber MessageQueue already exists. Reusing the existing queue.
-2010-07-06 20:06:48.9118 Hubsubscriber Getting message queue
-2010-07-06 20:06:48.9118 Hubsubscriber MessageQueue already exists. Reusing the existing queue.
