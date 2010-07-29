@@ -40,9 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IHubConfiguration.cs" />
     <Compile Include="IHubSubscriptionListener.cs" />
     <Compile Include="IHubSubscriptionPersistenceService.cs" />
+    <Compile Include="IHubSubscriptionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubscriptionServiceResult.cs" />
+    <Compile Include="SubscriptionResponseResultType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HubSubscriber.Models\HubSubscriber.Models.csproj">

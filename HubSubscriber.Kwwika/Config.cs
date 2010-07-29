@@ -3,7 +3,7 @@ using System;
 
 namespace HubSubscriber.Kwwika
 {
-    public static class Config
+    internal static class Config
     {
         public static int TrimEntryContentLength
         {
@@ -26,33 +26,6 @@ namespace HubSubscriber.Kwwika
             {
                 return @".\Private$\KwwikaPublishQueue";
             }
-        }
-
-        public static string HubUsername
-        {
-            get
-            {
-                string value = ConfigurationManager.AppSettings.Get("HubUsername");
-                return value;
-            }
-        }
-
-        public static object HubPassword
-        {
-            get
-            {
-                string value = ConfigurationManager.AppSettings.Get("HubPassword");
-                return value;
-            }
-        }
-
-        public static string HubRootUrl
-        {
-            get
-            {
-                string value = ConfigurationManager.AppSettings.Get("HubRootUrl");
-                return value;
-            }
-        }
+        }        
     }
 }

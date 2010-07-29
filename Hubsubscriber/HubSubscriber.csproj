@@ -103,7 +103,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="Controllers\HubConfiguration.cs" />
     <Compile Include="Controllers\HubSubscriptionController.cs" />
+    <Compile Include="Controllers\HubSubscriptionService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -121,6 +124,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\HubSubscription\Create.aspx" />
+    <Content Include="Views\HubSubscription\DeleteError.aspx" />
     <Content Include="Views\HubSubscription\HubUpdate.aspx" />
     <Content Include="Views\HubSubscription\Index.aspx" />
     <Content Include="Views\HubSubscription\EchoChallenge.aspx" />

@@ -8,3 +8,5 @@ Hubsubscriber/archives/*
 Hubsubscriber/ElmahLogs/*
 HubsubscriberTests/bin/*
 Hubsubscriber/Bin
+HubSubscriber.suo
+Hubsubscriber/logs/logfile.txt

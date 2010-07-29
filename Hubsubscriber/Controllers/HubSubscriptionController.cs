@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web.Mvc;
 using HubSubscriber.Kwwika;
 using HubSubscriber.Services;
 using Kwwika.Common.Logging;
-using System.Collections;
-using System.Collections.Generic;
 
-namespace HubSubscriber.Kwwika
+namespace HubSubscriber.Controllers
 {
     public class HubSubscriptionController : Controller
     {
         private ILoggingService _loggingService;        
         private IHubSubscriptionListener _hubSubscriptionListener;
         private IHubSubscriptionPersistenceService _subscriptionPersistenceService;
+        private IHubSubscriptionService _subscriptionService;
+        private HubConfiguration _hubConfiguration;
 
         public HubSubscriptionController():
             this(MvcApplication.LoggingService)
@@ -25,9 +25,59 @@ namespace HubSubscriber.Kwwika
 
         public HubSubscriptionController(ILoggingService loggingService)
         {
+            _hubConfiguration = new HubConfiguration()
+            {
+                HubMaximumSubscriptions = 10,
+                HubUsername = Config.HubUsername,
+                HubPassword = Config.HubPassword,
+                HubRoot = new Uri(Config.HubRootUrl)
+            };
+
             _loggingService = loggingService;
             _hubSubscriptionListener = MvcApplication.Container.GetService<IHubSubscriptionListener>();
             _subscriptionPersistenceService = MvcApplication.Container.GetService<IHubSubscriptionPersistenceService>();
+            _subscriptionService = MvcApplication.Container.GetService<IHubSubscriptionService>();
+        }
+
+
+        internal ILoggingService LoggingService
+        {
+            get
+            {
+                return _loggingService;
+            }
+        }
+
+        internal IHubConfiguration HubConfiguration
+        {
+            get
+            {
+                return _hubConfiguration;
+            }
+        }
+
+        internal IHubSubscriptionListener HubSubscriptionListener
+        {
+            get
+            {
+                return _hubSubscriptionListener;
+            }
+        }
+
+        internal IHubSubscriptionPersistenceService HubSubscriptionPersistenceService
+        {
+            get
+            {
+                return _subscriptionPersistenceService;
+            }
+        }
+
+        internal IHubSubscriptionService HubSubscriptionService
+        {
+            get
+            {
+                return _subscriptionService;
+            }
         }
 
         //
@@ -37,14 +87,6 @@ namespace HubSubscriber.Kwwika
         {
             ViewData.Model = (IEnumerable<SubscriptionModel>)_subscriptionPersistenceService.GetSubscriptionsList();
 
-            return View();
-        }
-
-        //
-        // GET: /HubSubscription/Details/5
-
-        public ActionResult Details(int id)
-        {
             return View();
         }
 
@@ -62,10 +104,14 @@ namespace HubSubscriber.Kwwika
         [HttpPost]
         public ActionResult Create([Bind(Exclude = "Id")] SubscriptionModel model)
         {
-            ActionResult view = null;
+            ActionResult view = View();
             try
             {
-                string appPath = Url.Content("~").Substring(1);
+                string appPath = Url.Content("~");
+                if(appPath.Length > 0)
+                {
+                    appPath = appPath.Substring(1);
+                }
                 model.Callback = model.Callback ?? Request.Url.GetLeftPart(UriPartial.Authority) + appPath + Url.Action("HubUpdate", "HubSubscription");
                 model.Mode = model.Mode ?? "subscribe";
                 model.Verify = model.Verify ?? "sync";
@@ -73,20 +119,17 @@ namespace HubSubscriber.Kwwika
                 _loggingService.Info("Creating subscription for " + model + "\nModel valid: " + ViewData.ModelState.IsValid);
 
                 ViewData.Model = model;
-                if (!ViewData.ModelState.IsValid)
+                if (ViewData.ModelState.IsValid)
                 {
-                    view = View();
-                }
-                else
-                {
-                    _subscriptionPersistenceService.StoreSubscription(model);                    
+                    _subscriptionPersistenceService.StoreSubscription(model);
 
-                    HttpWebResponse response = GetSubscriptionResponse(model);
+                    SubscriptionServiceResult result = _subscriptionService.Subscribe(_hubConfiguration, model);
 
-                    _loggingService.Info("Received response for create request: StatusCode: " + response.StatusDescription);
-
-                    view = HandlePubSubHubResponse(response);
-                    
+                    if (result.Type == SubscriptionResponseResultType.Error)
+                    {
+                        ViewData["ErrorDescription"] = result.ErrorDescription;
+                    }
+                    view = RedirectToAction("Index");
                 }
             }
             catch(Exception ex)
@@ -94,7 +137,6 @@ namespace HubSubscriber.Kwwika
                 string msg = "An exception occurred in Create method: " + ex.ToString();
                 _loggingService.Error(msg);
                 ViewData["ErrorDescription"] = msg;
-                view = View();
             }
             return view;
         }
@@ -104,47 +146,38 @@ namespace HubSubscriber.Kwwika
  
         public ActionResult Delete(int id)
         {
-            ActionResult view = View("Error");
+            ActionResult view = View("DeleteError");
 
             _loggingService.Info("Deleting subscription Id: " + id);
 
             try
             {                
-                SubscriptionModel sub = _subscriptionPersistenceService.GetSubscriptionById(id);
-                sub.PendingDeletion = true;
-                sub.LastUpdated = DateTime.Now;
-                _subscriptionPersistenceService.SaveChanges(sub);
-
-                var model = new SubscriptionModel();
-                model.Id = sub.Id;
-                model.Topic = sub.Topic;
-                string appPath = Url.Content("~").Substring(1);
-                model.Callback = model.Callback ?? Request.Url.GetLeftPart(UriPartial.Authority) + appPath + Url.Action("HubUpdate", "HubSubscription");
+                SubscriptionModel model = _subscriptionPersistenceService.GetSubscriptionById(id);
+                model.PendingDeletion = true;
+                model.LastUpdated = DateTime.Now;
                 model.Mode = "unsubscribe";
-                model.Verify = "sync";
-                var response = GetSubscriptionResponse(model);
+                _subscriptionPersistenceService.SaveChanges(model);
 
-                _loggingService.Info("Received response for delete request: StatusCode: " + response.StatusDescription);
+                SubscriptionServiceResult result = _subscriptionService.UnSubscribe(_hubConfiguration, model);
 
-                return HandlePubSubHubResponse(response);
-            }
-            catch (WebException we)
-            {
-                if ((int)((HttpWebResponse)we.Response).StatusCode == 422)
+                if (result.Type == SubscriptionResponseResultType.Error)
+                {
+                    ViewData["ErrorDescription"] = result.ErrorDescription;
+                }
+                else if (result.Type == SubscriptionResponseResultType.NotFound)
                 {
                     _subscriptionPersistenceService.DeleteSubscriptionById(id);
 
-                    string msg = "An exception in Delete method since the hub did not believe the subscription to exist. Deleted anyway.";
+                    string msg = "The subscription could not be found in the subscription service. Deleted anyway. " +
+                        result.ErrorDescription;
                     _loggingService.Error(msg);
                     ViewData["ErrorDescription"] = msg;
                 }
                 else
                 {
-                    string msg = "An exception in Delete method: " + we.ToString();
-                    _loggingService.Error(msg);
-                    ViewData["ErrorDescription"] = msg;
+                    view = RedirectToAction("Index");
                 }
-            }
+            }            
             catch (Exception ex)
             {
                 string msg = "An exception in Delete method: " + ex.ToString();
@@ -152,13 +185,7 @@ namespace HubSubscriber.Kwwika
                 ViewData["ErrorDescription"] = msg;
             }
 
-            return RedirectToAction("Index");
-        }
-
-        // deprecated
-        public ActionResult Update(int id)
-        {
-            return HubUpdate(id);
+            return view;
         }
 
         public ActionResult HubUpdate(int id)
@@ -196,7 +223,7 @@ namespace HubSubscriber.Kwwika
                         string documentContents;
                         using (Stream receiveStream = Request.InputStream)
                         {
-                            using (StreamReader  readStream = new StreamReader(receiveStream, Encoding.UTF8))
+                            using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
                             {
                                 documentContents = readStream.ReadToEnd();                                  
                             }
@@ -234,7 +261,7 @@ namespace HubSubscriber.Kwwika
                  if (_subscriptionPersistenceService.GetSubscriptionCountById(id) != 1)
                  {
                      _loggingService.Error("Error finding subscription for id: " + id + ". Simply echoing challenge to confirm the deletion");
-                     //Response.StatusCode = (int)HttpStatusCode.NotFound;
+                     Response.StatusCode = (int)HttpStatusCode.NotFound;
                  }
                  else
                  {
@@ -256,9 +283,9 @@ namespace HubSubscriber.Kwwika
                          }
                      }
                      _loggingService.Trace("Content received:" + Environment.NewLine + updateContent);
+                     Response.StatusCode = (int)HttpStatusCode.OK;
                  }
-                 ViewData["hub.challenge"] = Request["hub.challenge"];
-                 Response.StatusCode = (int)HttpStatusCode.OK;
+                 ViewData["hub.challenge"] = Request["hub.challenge"];                 
              }
              catch (Exception ex)
              {
@@ -271,52 +298,6 @@ namespace HubSubscriber.Kwwika
              _loggingService.Trace("Loading EchoChallange view with Status: " + Response.StatusDescription + " Challange: " + ViewData["hub.challenge"]);
 
              return View("EchoChallenge");
-        }
-
-        private ActionResult HandlePubSubHubResponse(HttpWebResponse response)
-        {
-            ActionResult view = RedirectToAction("Index");
-            _loggingService.Info("Response received: " + response.StatusCode);
-
-            if (response.StatusCode != HttpStatusCode.NoContent)
-            {
-                ViewData["ErrorDescription"] = "The pubsubhub returned " + response.StatusDescription;
-            }
-            else
-            {
-                using (Stream receiveStream = response.GetResponseStream())
-                {
-                    using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
-                    {
-                        string hubResponse = readStream.ReadToEnd();
-
-                        _loggingService.Info("Response text received: " + hubResponse);
-                    }
-                }
-            }
-            return view;
-        }
-
-        private HttpWebResponse GetSubscriptionResponse(SubscriptionModel model)
-        {
-            UriBuilder builder = new UriBuilder(Config.HubRootUrl);
-
-            string query = "hub.mode=" + model.Mode + "&";
-            query += "hub.verify=" + model.Verify + "&";
-            query += "hub.callback=" + model.Callback + "/" + model.Id + "&";
-            query += "hub.topic=" + model.Topic;
-            builder.Query = query;
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(builder.Uri);
-            byte[] authBytes = Encoding.UTF8.GetBytes((Config.HubUsername + ":" + Config.HubPassword).ToCharArray());
-            request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(authBytes);
-
-            request.Method = "POST";
-            request.PreAuthenticate = true;
-
-            _loggingService.Info("Making request to hub for subscription: " + request.RequestUri.ToString());
-
-            return (HttpWebResponse)request.GetResponse();
-        }
+        }        
     }
 }
