@@ -17,9 +17,19 @@ namespace HubSubscriber.Controllers
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
             _user = (requestContext.HttpContext.Session["User"] != null ? (UserModel)requestContext.HttpContext.Session["User"] : CreateDefaultUserModel() );
-            ViewData["User"] = _user;
+            ViewData["UserInfo"] = CreateUserInfo(_user);
             
             base.Initialize(requestContext);
+        }
+
+        protected UserInfoModel CreateUserInfo(UserModel user)
+        {
+            return new UserInfoModel()
+            {
+                Username = user.Username,
+                Status = user.IsLoggedIn ? "LoggedIn" : "LoggedOut",
+                PushTopic = user.PushTopic
+            };
         }
 
         protected UserModel CreateDefaultUserModel()
@@ -41,7 +51,7 @@ namespace HubSubscriber.Controllers
             {
                 _user = value;
                 Session["User"] = _user;
-                ViewData["User"] = _user;
+                ViewData["UserInfo"] = CreateUserInfo(_user);
             }
         }
 

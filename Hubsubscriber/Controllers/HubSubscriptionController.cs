@@ -95,6 +95,11 @@ namespace HubSubscriber.Controllers
 
         #region Application invoked methods
 
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         public ActionResult Login(LoginModel loginModel)
         {
             ViewData.Model = loginModel;
@@ -122,8 +127,6 @@ namespace HubSubscriber.Controllers
                         userModel.IsLoggedIn = true;
 
                         SubscriptionUser = userModel;
-
-                        return RedirectToAction("Index");
                     }
                     else
                     {
@@ -131,33 +134,25 @@ namespace HubSubscriber.Controllers
                     }
                 }
             }
-            
-            return View();
+
+            return Json(CreateUserInfo(SubscriptionUser));
         }
 
         public ActionResult Logout()
         {
             SubscriptionUser = CreateDefaultUserModel();
-            return RedirectToAction("Index");        
+            return Json(CreateUserInfo(SubscriptionUser));       
         }
 
         //
         // GET: /HubSubscription/
 
-        public ActionResult Index()
+        public ActionResult List()
         {
-            ViewData.Model = (IEnumerable<SubscriptionModel>)_subscriptionPersistenceService.GetSubscriptionsList(HubConfiguration.HubUsername);
+            var subscriptions = (IEnumerable<SubscriptionModel>)_subscriptionPersistenceService.GetSubscriptionsList(HubConfiguration.HubUsername);
 
-            return View();
+            return Json(subscriptions);
         }
-
-        //
-        // GET: /HubSubscription/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        } 
 
         //
         // POST: /HubSubscription/Create
@@ -165,7 +160,7 @@ namespace HubSubscriber.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Exclude = "Id")] SubscriptionModel model)
         {
-            ActionResult view = View();
+            JsonResult jsonResult = null;
             try
             {
                 model.Callback = model.Callback ?? Request.Url.GetLeftPart(UriPartial.Authority) + GetAppPath() + Url.Action("HubUpdate", "HubSubscription");
@@ -176,7 +171,15 @@ namespace HubSubscriber.Controllers
                 _loggingService.Info("Creating subscription for " + model + "\nModel valid: " + ViewData.ModelState.IsValid);
 
                 ViewData.Model = model;
-                if (ViewData.ModelState.IsValid)
+                if (!ViewData.ModelState.IsValid)
+                {
+                    jsonResult = Json(new SubscriptionServiceResult()
+                    {
+                        Type = SubscriptionResponseResultType.Error,
+                        ErrorDescription = "Model is not valid"
+                    });
+                }
+                else
                 {
                     int maxSubsForUser = _subscriptionPersistenceService.GetMaxSubscriptionsForUser(model.PubSubHubUser);
                     int userSubCount = _subscriptionPersistenceService.GetSubscriptionCountForUser(model.PubSubHubUser);
@@ -186,7 +189,12 @@ namespace HubSubscriber.Controllers
                         string msg = 
                             string.Format("Maximum number of subscriptions reaced for user. Subscriptions in use {0}. Maximum subscriptions {1}.",
                                 userSubCount, maxSubsForUser);
-                        ViewData["ErrorDescription"] = msg;
+                        
+                        jsonResult = Json(new SubscriptionServiceResult()
+                        {
+                            Type = SubscriptionResponseResultType.Error,
+                            ErrorDescription = msg
+                        });
                     }
                     else
                     {
@@ -194,14 +202,7 @@ namespace HubSubscriber.Controllers
 
                         SubscriptionServiceResult result = _subscriptionService.Subscribe(HubConfiguration, model);
 
-                        if (result.Type != SubscriptionResponseResultType.Success)
-                        {
-                            ViewData["ErrorDescription"] = result.ErrorDescription;
-                        }
-                        else
-                        {
-                            view = RedirectToAction("Index");
-                        }
+                        jsonResult = Json(result);
                     }
                 }
             }
@@ -209,10 +210,15 @@ namespace HubSubscriber.Controllers
             {
                 string msg = "An exception occurred in Create method: " + ex.ToString();
                 _loggingService.Error(msg);
-                ViewData["ErrorDescription"] = msg;
+                
+                jsonResult = Json(new SubscriptionServiceResult()
+                {
+                    Type = SubscriptionResponseResultType.Error,
+                    ErrorDescription = msg
+                });
             }
 
-            return view;
+            return jsonResult;
         }
 
         //
@@ -220,7 +226,7 @@ namespace HubSubscriber.Controllers
  
         public ActionResult Delete(int id)
         {
-            ActionResult view = View("DeleteError");
+            JsonResult jsonResult = null;
 
             _loggingService.Info("Deleting subscription Id: " + id);
 
@@ -234,33 +240,29 @@ namespace HubSubscriber.Controllers
 
                 SubscriptionServiceResult result = _subscriptionService.UnSubscribe(HubConfiguration, model);
 
-                if (result.Type == SubscriptionResponseResultType.Error ||
-                    result.Type == SubscriptionResponseResultType.NotAuthorised)
-                {
-                    ViewData["ErrorDescription"] = result.ErrorDescription;
-                }
-                else if (result.Type == SubscriptionResponseResultType.NotFound)
+                if (result.Type == SubscriptionResponseResultType.NotFound)
                 {
                     _subscriptionPersistenceService.DeleteSubscriptionById(id);
 
                     string msg = "The subscription could not be found in the subscription service. Deleted anyway. " +
                         result.ErrorDescription;
                     _loggingService.Error(msg);
-                    ViewData["ErrorDescription"] = msg;
                 }
-                else
-                {
-                    view = RedirectToAction("Index");
-                }
+                jsonResult = Json(result);
             }            
             catch (Exception ex)
             {
                 string msg = "An exception in Delete method: " + ex.ToString();
                 _loggingService.Error(msg);
-                ViewData["ErrorDescription"] = msg;
+
+                jsonResult = Json(new SubscriptionServiceResult()
+                {
+                    ErrorDescription = msg,
+                    Type = SubscriptionResponseResultType.Error
+                });
             }
 
-            return view;
+            return jsonResult;
         }
         #endregion
 

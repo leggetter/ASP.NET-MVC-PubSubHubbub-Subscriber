@@ -36,7 +36,8 @@ namespace HubSubscriber.Controllers
         {
             SubscriptionServiceResult result = new SubscriptionServiceResult()
             {
-                Type = SubscriptionResponseResultType.Success
+                Type = SubscriptionResponseResultType.Success,
+                Subscription = model
             };
 
             var request = CreateRequest(configuration, model);

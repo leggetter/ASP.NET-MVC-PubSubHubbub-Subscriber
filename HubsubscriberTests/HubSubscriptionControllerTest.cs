@@ -139,15 +139,6 @@ namespace HubsubscriberTests
         }
 
         [TestMethod()]
-        public void CreateTest()
-        {
-            HubSubscriptionController target = new HubSubscriptionController();
-            ActionResult actual = target.Create();
-
-            Assert.IsNotNull(actual);
-        }
-
-        [TestMethod()]
         public void Create_stores_subscription_and_makes_subscription_request_to_subscription_service()
         {
             SubscriptionModel model = new SubscriptionModel();
@@ -174,7 +165,7 @@ namespace HubsubscriberTests
         public void Create_sets_error_if_MaxSubscriptions_has_been_reached_test()
         {
             SubscriptionModel model = new SubscriptionModel();
-            ActionResult actual = null;
+            JsonResult actual = null;
 
             With.Mocks(_mocks).Expecting(delegate
             {
@@ -183,17 +174,20 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Create(model);
+                actual = (JsonResult)_controller.Create(model);
             });
             Assert.IsNotNull(actual);
-            Assert.IsNotNull(_controller.ViewData["ErrorDescription"]);
+
+            dynamic data = actual.Data;
+            Assert.AreEqual(SubscriptionResponseResultType.Error, data.Type);
+            Assert.IsNotNull(data.ErrorDescription);
         }
 
         [TestMethod()]
         public void Create_sets_ViewData_ErrorDescription_when_result_has_Error_type_test()
         {
             SubscriptionModel model = new SubscriptionModel();
-            ActionResult actual = null;
+            JsonResult actual = null;
             string errorDescription = "an error";
 
             With.Mocks(_mocks).Expecting(delegate
@@ -212,16 +206,19 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Create(model);
+                actual = (JsonResult)_controller.Create(model);
             });
+
+            dynamic data = actual.Data;
             Assert.IsNotNull(actual);
-            Assert.AreEqual(errorDescription, (string)(_controller.ViewData["ErrorDescription"]));
+            Assert.AreEqual(SubscriptionResponseResultType.Error, data.Type);
+            Assert.AreEqual(errorDescription, data.ErrorDescription);
         }
 
         [TestMethod()]
         public void Delete_stores_subscription_and_makes_subscription_request_to_subscription_service()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             int deleteId = 1;
             SubscriptionModel model = new SubscriptionModel();
 
@@ -239,7 +236,7 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Delete(deleteId);
+                actual = (JsonResult)_controller.Delete(deleteId);
             });
             Assert.IsNotNull(actual);
         }
@@ -247,7 +244,7 @@ namespace HubsubscriberTests
         [TestMethod()]
         public void Delete_subscription_NotFound_in_subscription_service_sets_ErrorDescription()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             int deleteId = 1;
             SubscriptionModel model = new SubscriptionModel();
 
@@ -264,10 +261,12 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Delete(deleteId);
+                actual = (JsonResult)_controller.Delete(deleteId);
             });
+
+            dynamic result = actual.Data;
             Assert.IsNotNull(actual);
-            Assert.IsNotNull(_controller.ViewData["ErrorDescription"]);
+            Assert.AreEqual(SubscriptionResponseResultType.NotFound, result.Type);
         } 
 
         [TestMethod()]
@@ -401,9 +400,9 @@ namespace HubsubscriberTests
         }
 
         [TestMethod()]
-        public void IndexTest()
+        public void List_returns_all_subscriptions_for_session_user_Test()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             var subsList = new List<SubscriptionModel>();
 
             With.Mocks(_mocks).Expecting(delegate
@@ -412,16 +411,56 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Index();
+                actual = (JsonResult)_controller.List();
             });
+
+            dynamic data = actual.Data;
             Assert.IsNotNull(actual);
-            Assert.AreEqual(subsList, _controller.ViewData.Model);
+            Assert.AreEqual(subsList, data);
+            Assert.AreEqual(0, data.Count);
+        }
+
+        [TestMethod()]
+        public void JsonResult_can_contain_multiple_subscriptions_Test()
+        {
+            JsonResult actual = null;
+            var subsList = new List<SubscriptionModel>()
+            {
+                new SubscriptionModel()
+                {
+                    Id = 0,
+                    Topic = "topic0"
+                },
+                new SubscriptionModel()
+                {
+                    Id = 1,
+                    Topic = "topic1"
+                }
+            };
+
+            With.Mocks(_mocks).Expecting(delegate
+            {
+                _subscriptionPersistenceService.Expect(x => x.GetSubscriptionsList(Config.HubUsername)).Return(subsList);
+
+            }).Verify(delegate
+            {
+                actual = (JsonResult)_controller.List();
+            });
+
+            dynamic data = actual.Data;
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(subsList, data);
+            Assert.AreEqual(2, data.Count);
+            Assert.AreEqual(subsList[0].Id, data[0].Id);
+            Assert.AreEqual(subsList[0].Topic, data[0].Topic);
+            Assert.AreEqual(subsList[0].Id, data[0].Id);
+            Assert.AreEqual(subsList[1].Topic, data[1].Topic);
         }
 
         [TestMethod()]
         public void Login_checks_user_has_been_added_to_the_database_and_Error_is_set_when_user_does_not_exist_Test()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             SubscriptionModel model = new SubscriptionModel();
             UserModel userModel = new UserModel()
             {
@@ -436,16 +475,21 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Login(userModel);
+                actual = (JsonResult)_controller.Login(userModel);
             });
 
+            
+            dynamic userInfoModel = actual.Data;
             Assert.IsNotNull(_controller.ViewData.ModelState["_FORM"]);
+            
+            Assert.IsNotNull(actual);
+            Assert.AreEqual("LoggedOut", userInfoModel.Status);
         }
 
         [TestMethod()]
         public void Login_attempts_a_Subscribe_and_Unsubscribe_on_subscription_service_Test()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             SubscriptionModel model = new SubscriptionModel();
             UserModel userModel = new UserModel()
                 {
@@ -474,17 +518,18 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Login(userModel);
+                actual = (JsonResult)_controller.Login(userModel);
             });
 
+            dynamic userInfoModel = actual.Data;
             Assert.IsNotNull(actual);
-            Assert.IsNull(_controller.ViewData["ErrorDescription"]);
+            Assert.AreEqual("LoggedIn", userInfoModel.Status);
         }
 
         [TestMethod()]
-        public void Login_attempts_a_Subscribe_and_NotAuthorisedResponse_leads_to_ErrorDescription_being_set_Test()
+        public void Login_attempts_a_Subscribe_and_NotAuthorisedResponse_leads_to_failed_Login_Test()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             SubscriptionModel model = new SubscriptionModel();
             UserModel userModel = new UserModel()
             {
@@ -506,26 +551,29 @@ namespace HubsubscriberTests
 
             }).Verify(delegate
             {
-                actual = _controller.Login(userModel);
+                actual = (JsonResult)_controller.Login(userModel);
             });
 
+            dynamic userInfoModel = actual.Data;
             Assert.IsNotNull(actual);
-            Assert.IsNull(_controller.ViewData["ErrorDescription"]);
+            Assert.AreEqual("LoggedOut", userInfoModel.Status);
         }
 
         [TestMethod()]
-        public void Logout_does_not_return_null_Test()
+        public void Logout_returns_loggedOut_UserInfoModel_Test()
         {
-            ActionResult actual = null;
+            JsonResult actual = null;
             With.Mocks(_mocks).Expecting(delegate
             {
 
             }).Verify(delegate
             {
-                actual = _controller.Logout();
+                actual = (JsonResult)_controller.Logout();
             });
 
+            dynamic userInfoModel = actual.Data;
             Assert.IsNotNull(actual);
+            Assert.AreEqual("LoggedOut", userInfoModel.Status);
         }
 
         [TestMethod()]

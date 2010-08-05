@@ -111,19 +111,33 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\Images\black_gloss_btn.png" />
+    <Content Include="Content\Images\black_gloss_hover_btn.png" />
+    <Content Include="Content\Images\blue_gloss_btn.png" />
+    <Content Include="Content\Images\blue_gloss_hover_btn.png" />
+    <Content Include="Content\Images\content-back.png" />
+    <Content Include="Content\Images\header-back.png" />
+    <Content Include="Content\Images\link_arrow.png" />
+    <Content Include="Content\Images\placeholder.png" />
+    <Content Include="Content\Images\side-back.png" />
+    <Content Include="Content\Images\topic_tri.png" />
+    <Content Include="Content\js\formValidator.1.7\css\template.css" />
+    <Content Include="Content\js\formValidator.1.7\css\validationEngine.jquery.css" />
+    <Content Include="Content\js\formValidator.1.7\demoSubmit.html" />
+    <Content Include="Content\js\formValidator.1.7\index.html" />
+    <Content Include="Content\js\formValidator.1.7\indexOverflown.html" />
+    <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine-en.js" />
+    <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine-fr.js" />
+    <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine.js" />
+    <Content Include="Content\style.css" />
     <Content Include="ElmahLogs\placeholder.txt" />
     <Content Include="Global.asax" />
-    <Content Include="Views\HubSubscription\Create.aspx" />
-    <Content Include="Views\HubSubscription\DeleteError.aspx" />
-    <Content Include="Views\HubSubscription\HubUpdate.aspx" />
     <Content Include="Views\HubSubscription\Index.aspx" />
     <Content Include="Views\HubSubscription\EchoChallenge.aspx" />
-    <Content Include="Views\HubSubscription\Login.aspx" />
-    <Content Include="Views\Shared\LoginUserControl.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -164,8 +178,11 @@
       <Name>HubSubscriber.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Models\" />
+    <None Include="Content\Images\Thumbs.db" />
+    <None Include="Content\js\formValidator.1.7\ajaxSubmit.php" />
+    <None Include="Content\js\formValidator.1.7\validateUser.php" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
