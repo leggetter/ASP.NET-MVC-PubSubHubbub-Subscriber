@@ -1,17 +1,19 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="HubSubscriber.Views.Shared.Site" %>
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1" runat="server">
-    <title></title>
+<head>
+    <title><asp:ContentPlaceHolder ID="title" runat="server"></asp:ContentPlaceHolder></title>
+    
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
     <script src="http://api.kwwika.com/latest"></script>
     <script>
     var connection = kwwika.Service.connect();
-    var newsSubscriptions = connection.subscribe("/KWWIKA/SANDBOX",
+    var newsSubscriptions = connection.subscribe('<%= ((HubSubscriber.Models.UserModel)ViewData["User"]).PushTopic %>',
     {
         topicUpdated: function (sub, update)
         {
@@ -56,7 +58,8 @@
     </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <% Html.RenderPartial("LoginUserControl", (HubSubscriber.Models.UserModel)ViewData["User"]); %>
+
     <div>
         <asp:ContentPlaceHolder ID="main" runat="server">
         
@@ -68,7 +71,6 @@
             <div id="updating_news"></div>
         </div>
     </div>
-    </form>
 
     <!-- Start of StatCounter Code --> 
     <script type="text/javascript"> 

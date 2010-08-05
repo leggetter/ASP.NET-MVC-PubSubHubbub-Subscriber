@@ -1,9 +1,9 @@
 ﻿<%@ Page Title="" Language="C#"
     MasterPageFile="~/Views/Shared/Site.Master"
-    Inherits="System.Web.Mvc.ViewPage<IEnumerable<HubSubscriber.Kwwika.SubscriptionModel>>" %>
+    Inherits="System.Web.Mvc.ViewPage<IEnumerable<HubSubscriber.Models.SubscriptionModel>>" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <h2>Subscription List</h2>
+<asp:Content ID="Content1" ContentPlaceHolderID="title" runat="server">
+    Subscription List
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="main" runat="server">
@@ -12,6 +12,7 @@
            <h2>Error:</h2>
            <div class="general-error"><%: ViewData["ErrorDescription"]%></div>
         <%} %>
+        <h2>Subscription List</h2>
 <table>
         <tr>
             <th></th>

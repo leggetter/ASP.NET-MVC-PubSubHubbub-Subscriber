@@ -16,8 +16,13 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 
 [assembly: EdmSchemaAttribute()]
+#region EDM Relationship Metadata
 
-namespace HubSubscriber.Kwwika
+[assembly: EdmRelationshipAttribute("HubSubscriber.Kwwika", "FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HubSubscriber.Models.User), "hubsubscriber_Subscriptions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HubSubscriber.Models.Subscription), true)]
+
+#endregion
+
+namespace HubSubscriber.Models
 {
     #region Contexts
     
@@ -80,6 +85,22 @@ namespace HubSubscriber.Kwwika
             }
         }
         private ObjectSet<Subscription> _SubscriptionsSet;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<User> UsersSet
+        {
+            get
+            {
+                if ((_UsersSet == null))
+                {
+                    _UsersSet = base.CreateObjectSet<User>("UsersSet");
+                }
+                return _UsersSet;
+            }
+        }
+        private ObjectSet<User> _UsersSet;
 
         #endregion
         #region AddTo Methods
@@ -90,6 +111,14 @@ namespace HubSubscriber.Kwwika
         public void AddToSubscriptionsSet(Subscription subscription)
         {
             base.AddObject("SubscriptionsSet", subscription);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the UsersSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToUsersSet(User user)
+        {
+            base.AddObject("UsersSet", user);
         }
 
         #endregion
@@ -121,7 +150,8 @@ namespace HubSubscriber.Kwwika
         /// <param name="digest">Initial value of the Digest property.</param>
         /// <param name="verified">Initial value of the Verified property.</param>
         /// <param name="pendingDeletion">Initial value of the PendingDeletion property.</param>
-        public static Subscription CreateSubscription(global::System.Int32 id, global::System.String mode, global::System.String verify, global::System.String topic, global::System.String callback, global::System.Boolean digest, global::System.Boolean verified, global::System.Boolean pendingDeletion)
+        /// <param name="pubSubHubUser">Initial value of the PubSubHubUser property.</param>
+        public static Subscription CreateSubscription(global::System.Int32 id, global::System.String mode, global::System.String verify, global::System.String topic, global::System.String callback, global::System.Boolean digest, global::System.Boolean verified, global::System.Boolean pendingDeletion, global::System.String pubSubHubUser)
         {
             Subscription subscription = new Subscription();
             subscription.Id = id;
@@ -132,6 +162,7 @@ namespace HubSubscriber.Kwwika
             subscription.Digest = digest;
             subscription.Verified = verified;
             subscription.PendingDeletion = pendingDeletion;
+            subscription.PubSubHubUser = pubSubHubUser;
             return subscription;
         }
 
@@ -380,9 +411,206 @@ namespace HubSubscriber.Kwwika
         private global::System.Boolean _PendingDeletion;
         partial void OnPendingDeletionChanging(global::System.Boolean value);
         partial void OnPendingDeletionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PubSubHubUser
+        {
+            get
+            {
+                return _PubSubHubUser;
+            }
+            set
+            {
+                OnPubSubHubUserChanging(value);
+                ReportPropertyChanging("PubSubHubUser");
+                _PubSubHubUser = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("PubSubHubUser");
+                OnPubSubHubUserChanged();
+            }
+        }
+        private global::System.String _PubSubHubUser;
+        partial void OnPubSubHubUserChanging(global::System.String value);
+        partial void OnPubSubHubUserChanged();
 
         #endregion
     
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("HubSubscriber.Kwwika", "FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users")]
+        public User hubsubscriber_Users
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<User> hubsubscriber_UsersReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Users", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="HubSubscriber.Kwwika", Name="User")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class User : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new User object.
+        /// </summary>
+        /// <param name="pubSubHubUser">Initial value of the PubSubHubUser property.</param>
+        /// <param name="kwwikaTopic">Initial value of the KwwikaTopic property.</param>
+        /// <param name="maxHubSubscriptions">Initial value of the MaxHubSubscriptions property.</param>
+        public static User CreateUser(global::System.String pubSubHubUser, global::System.String kwwikaTopic, global::System.Int16 maxHubSubscriptions)
+        {
+            User user = new User();
+            user.PubSubHubUser = pubSubHubUser;
+            user.KwwikaTopic = kwwikaTopic;
+            user.MaxHubSubscriptions = maxHubSubscriptions;
+            return user;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PubSubHubUser
+        {
+            get
+            {
+                return _PubSubHubUser;
+            }
+            set
+            {
+                if (_PubSubHubUser != value)
+                {
+                    OnPubSubHubUserChanging(value);
+                    ReportPropertyChanging("PubSubHubUser");
+                    _PubSubHubUser = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("PubSubHubUser");
+                    OnPubSubHubUserChanged();
+                }
+            }
+        }
+        private global::System.String _PubSubHubUser;
+        partial void OnPubSubHubUserChanging(global::System.String value);
+        partial void OnPubSubHubUserChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String KwwikaTopic
+        {
+            get
+            {
+                return _KwwikaTopic;
+            }
+            set
+            {
+                OnKwwikaTopicChanging(value);
+                ReportPropertyChanging("KwwikaTopic");
+                _KwwikaTopic = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("KwwikaTopic");
+                OnKwwikaTopicChanged();
+            }
+        }
+        private global::System.String _KwwikaTopic;
+        partial void OnKwwikaTopicChanging(global::System.String value);
+        partial void OnKwwikaTopicChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 MaxHubSubscriptions
+        {
+            get
+            {
+                return _MaxHubSubscriptions;
+            }
+            set
+            {
+                OnMaxHubSubscriptionsChanging(value);
+                ReportPropertyChanging("MaxHubSubscriptions");
+                _MaxHubSubscriptions = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MaxHubSubscriptions");
+                OnMaxHubSubscriptionsChanged();
+            }
+        }
+        private global::System.Int16 _MaxHubSubscriptions;
+        partial void OnMaxHubSubscriptionsChanging(global::System.Int16 value);
+        partial void OnMaxHubSubscriptionsChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("HubSubscriber.Kwwika", "FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Subscriptions")]
+        public EntityCollection<Subscription> hubsubscriber_Subscriptions
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Subscription>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Subscriptions");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Subscription>("HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users", "hubsubscriber_Subscriptions", value);
+                }
+            }
+        }
+
+        #endregion
     }
 
     #endregion

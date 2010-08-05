@@ -8,7 +8,7 @@
     <ProjectGuid>{5DD7D6B3-2C95-4B42-AF5C-DC23E621CD43}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HubSubscriber.Kwwika</RootNamespace>
+    <RootNamespace>HubSubscriber.Models</RootNamespace>
     <AssemblyName>HubSubscriber.Kwwika</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

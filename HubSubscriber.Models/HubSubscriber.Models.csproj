@@ -8,7 +8,7 @@
     <ProjectGuid>{4DDE5723-5BFF-4093-BAEA-35EC1EEF2CB8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HubSubscriber.Kwwika</RootNamespace>
+    <RootNamespace>HubSubscriber.Models</RootNamespace>
     <AssemblyName>HubSubscriber.Models</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoginModel.cs" />
     <Compile Include="SubscriptionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

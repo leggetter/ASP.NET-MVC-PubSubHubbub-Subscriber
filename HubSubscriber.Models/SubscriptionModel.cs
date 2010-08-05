@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace HubSubscriber.Kwwika
+namespace HubSubscriber.Models
 {
     public class SubscriptionModel
     {
@@ -51,5 +51,7 @@ namespace HubSubscriber.Kwwika
         public bool Verified { get; set; }
 
         public DateTime? LastUpdated { get; set; }
+
+        public string PubSubHubUser { get; set; }
     }
 }

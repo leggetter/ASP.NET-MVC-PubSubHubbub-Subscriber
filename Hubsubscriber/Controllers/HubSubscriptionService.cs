@@ -6,7 +6,7 @@ using HubSubscriber.Services;
 using System.Net;
 using Kwwika.Common.Logging;
 using System.IO;
-using HubSubscriber.Kwwika;
+using HubSubscriber.Models;
 
 namespace HubSubscriber.Controllers
 {
@@ -38,6 +38,7 @@ namespace HubSubscriber.Controllers
             {
                 Type = SubscriptionResponseResultType.Success
             };
+
             var request = CreateRequest(configuration, model);
 
             try
@@ -65,14 +66,19 @@ namespace HubSubscriber.Controllers
             }
             catch (WebException we)
             {
-                if ((int)((HttpWebResponse)we.Response).StatusCode == 422)
+                if (((HttpWebResponse)we.Response).StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    result.Type = SubscriptionResponseResultType.NotAuthorised;
+                    result.ErrorDescription = "The credentials provided were not accepted by the subscription hub";
+                }
+                else if ((int)((HttpWebResponse)we.Response).StatusCode == 422)
                 {
                     result.Type = SubscriptionResponseResultType.NotFound;
-                    result.ErrorDescription = "An exception in Delete method since the hub did not believe the subscription to exist. Deleted anyway.";
+                    result.ErrorDescription = model.Mode + " error. The hub did not believe the subscription to exist or the sync callback failed.";
                 }
                 else
                 {
-                    string msg = "An exception in Unsubscribe method: " + we.ToString();
+                    string msg = model.Mode + " error. " + we.ToString();
                     _loggingService.Error(msg);
                     result.Type = SubscriptionResponseResultType.Error;
                     result.ErrorDescription = msg;

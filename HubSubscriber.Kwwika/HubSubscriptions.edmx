@@ -4,9 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HubSubscriber.Kwwika.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="HubSubscriber.Kwwika.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="HubSubscriberKwwikaStoreContainer">
           <EntitySet Name="hubsubscriber_Subscriptions" EntityType="HubSubscriber.Kwwika.Store.hubsubscriber_Subscriptions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="hubsubscriber_Users" EntityType="HubSubscriber.Kwwika.Store.hubsubscriber_Users" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_hubsubscriber_Subscriptions_hubsubscriber_Users" Association="HubSubscriber.Kwwika.Store.FK_hubsubscriber_Subscriptions_hubsubscriber_Users">
+            <End Role="hubsubscriber_Users" EntitySet="hubsubscriber_Users" />
+            <End Role="hubsubscriber_Subscriptions" EntitySet="hubsubscriber_Subscriptions" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="hubsubscriber_Subscriptions">
           <Key>
@@ -22,48 +27,110 @@
           <Property Name="Verified" Type="bit" Nullable="false" />
           <Property Name="LastUpdated" Type="smalldatetime" />
           <Property Name="PendingDeletion" Type="bit" Nullable="false" />
+          <Property Name="PubSubHubUser" Type="varchar" Nullable="false" MaxLength="100" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <EntityType Name="hubsubscriber_Users">
+          <Key>
+            <PropertyRef Name="PubSubHubUser" />
+          </Key>
+          <Property Name="PubSubHubUser" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="KwwikaTopic" Type="varchar" Nullable="false" MaxLength="300" />
+          <Property Name="MaxHubSubscriptions" Type="smallint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_hubsubscriber_Subscriptions_hubsubscriber_Users">
+          <End Role="hubsubscriber_Users" Type="HubSubscriber.Kwwika.Store.hubsubscriber_Users" Multiplicity="1" />
+          <End Role="hubsubscriber_Subscriptions" Type="HubSubscriber.Kwwika.Store.hubsubscriber_Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hubsubscriber_Users">
+              <PropertyRef Name="PubSubHubUser" />
+            </Principal>
+            <Dependent Role="hubsubscriber_Subscriptions">
+              <PropertyRef Name="PubSubHubUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HubSubscriber.Kwwika" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="HubSubscriberEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="SubscriptionsSet" EntityType="HubSubscriber.Kwwika.Subscription" />
+          <EntitySet Name="UsersSet" EntityType="HubSubscriber.Kwwika.User" />
+          <AssociationSet Name="FK_hubsubscriber_Subscriptions_hubsubscriber_Users" Association="HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users">
+            <End Role="hubsubscriber_Users" EntitySet="UsersSet" />
+            <End Role="hubsubscriber_Subscriptions" EntitySet="SubscriptionsSet" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Subscription">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Mode" Type="String" Nullable="false" MaxLength="11" Unicode="false" FixedLength="false" />
-          <Property Name="Verify" Type="String" Nullable="false" MaxLength="5" Unicode="false" FixedLength="false" />
-          <Property Name="Topic" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
-          <Property Name="Callback" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
-          <Property Name="Digest" Type="Boolean" Nullable="false" />
-          <Property Name="Hub" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
-          <Property Name="Verified" Type="Boolean" Nullable="false" />
-          <Property Name="LastUpdated" Type="DateTime" />
-          <Property Name="PendingDeletion" Type="Boolean" Nullable="false" />
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Mode" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Verify" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Topic" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Callback" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Digest" Nullable="false" />
+          <Property Type="String" Name="Hub" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Verified" Nullable="false" />
+          <Property Type="DateTime" Name="LastUpdated" />
+          <Property Type="Boolean" Name="PendingDeletion" Nullable="false" />
+          <Property Type="String" Name="PubSubHubUser" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hubsubscriber_Users" Relationship="HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users" FromRole="hubsubscriber_Subscriptions" ToRole="hubsubscriber_Users" />
         </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="PubSubHubUser" />
+          </Key>
+          <Property Type="String" Name="PubSubHubUser" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="KwwikaTopic" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hubsubscriber_Subscriptions" Relationship="HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users" FromRole="hubsubscriber_Users" ToRole="hubsubscriber_Subscriptions" />
+          <Property Type="Int16" Name="MaxHubSubscriptions" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_hubsubscriber_Subscriptions_hubsubscriber_Users">
+          <End Type="HubSubscriber.Kwwika.User" Role="hubsubscriber_Users" Multiplicity="1" />
+          <End Type="HubSubscriber.Kwwika.Subscription" Role="hubsubscriber_Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hubsubscriber_Users">
+              <PropertyRef Name="PubSubHubUser" />
+            </Principal>
+            <Dependent Role="hubsubscriber_Subscriptions">
+              <PropertyRef Name="PubSubHubUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="HubSubscriberKwwikaStoreContainer" CdmEntityContainer="HubSubscriberEntities">
-          <EntitySetMapping Name="SubscriptionsSet"><EntityTypeMapping TypeName="HubSubscriber.Kwwika.Subscription"><MappingFragment StoreEntitySet="hubsubscriber_Subscriptions">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Mode" ColumnName="Mode" />
-            <ScalarProperty Name="Verify" ColumnName="Verify" />
-            <ScalarProperty Name="Topic" ColumnName="Topic" />
-            <ScalarProperty Name="Callback" ColumnName="Callback" />
-            <ScalarProperty Name="Digest" ColumnName="Digest" />
-            <ScalarProperty Name="Hub" ColumnName="Hub" />
-            <ScalarProperty Name="Verified" ColumnName="Verified" />
-            <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
-            <ScalarProperty Name="PendingDeletion" ColumnName="PendingDeletion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="SubscriptionsSet">
+            <EntityTypeMapping TypeName="HubSubscriber.Kwwika.Subscription">
+              <MappingFragment StoreEntitySet="hubsubscriber_Subscriptions">
+                <ScalarProperty Name="PubSubHubUser" ColumnName="PubSubHubUser" />
+                <ScalarProperty Name="PendingDeletion" ColumnName="PendingDeletion" />
+                <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+                <ScalarProperty Name="Verified" ColumnName="Verified" />
+                <ScalarProperty Name="Hub" ColumnName="Hub" />
+                <ScalarProperty Name="Digest" ColumnName="Digest" />
+                <ScalarProperty Name="Callback" ColumnName="Callback" />
+                <ScalarProperty Name="Topic" ColumnName="Topic" />
+                <ScalarProperty Name="Verify" ColumnName="Verify" />
+                <ScalarProperty Name="Mode" ColumnName="Mode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsersSet">
+            <EntityTypeMapping TypeName="HubSubscriber.Kwwika.User">
+              <MappingFragment StoreEntitySet="hubsubscriber_Users">
+                <ScalarProperty Name="MaxHubSubscriptions" ColumnName="MaxHubSubscriptions" />
+                <ScalarProperty Name="KwwikaTopic" ColumnName="KwwikaTopic" />
+                <ScalarProperty Name="PubSubHubUser" ColumnName="PubSubHubUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -85,7 +152,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="HubSubscriptions">
-        <EntityTypeShape EntityType="HubSubscriber.Kwwika.Subscription" Width="1.5" PointX="0.75" PointY="0.75" Height="2.9417936197916665" IsExpanded="true" />
+        <EntityTypeShape EntityType="HubSubscriber.Kwwika.Subscription" Width="1.5" PointX="3" PointY="1" Height="3.3263964843749996" />
+        <EntityTypeShape EntityType="HubSubscriber.Kwwika.User" Width="1.5" PointX="0.75" PointY="1.875" Height="1.5956835937499996" />
+        <AssociationConnector Association="HubSubscriber.Kwwika.FK_hubsubscriber_Subscriptions_hubsubscriber_Users" >
+          <ConnectorPoint PointX="2.25" PointY="2.672841796875" />
+          <ConnectorPoint PointX="3" PointY="2.672841796875" />
+        </AssociationConnector>
       </Diagram>
     </Diagrams>
   </Designer>

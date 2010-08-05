@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using System.Xml;
 using Kwwika.Common.Logging;
 using HubSubscriber.Kwwika;
+using Rhino.Mocks;
 
 namespace HubsubscriberTests
 {
@@ -19,6 +20,8 @@ namespace HubsubscriberTests
 
 
         private TestContext testContextInstance;
+        private MockRepository _mocks;
+        private ILoggingService _loggingService;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -53,10 +56,12 @@ namespace HubsubscriberTests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            _mocks = new MockRepository();
+            _loggingService = _mocks.Stub<ILoggingService>();
+        }
         //
         //Use TestCleanup to run code after each test has run
         //[TestCleanup()]
@@ -101,7 +106,7 @@ namespace HubsubscriberTests
                         "</feed>");
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(doc.NameTable);
             nsMgr.AddNamespace("atom", "http://www.w3.org/2005/Atom");
-            var extractor = new XPathValueExtractorService(doc, nsMgr, null);
+            var extractor = new XPathValueExtractorService(doc, nsMgr, _loggingService);
 
             string feedUpdated = extractor.TryGetValue("//atom:feed/atom:updated/text()");
             string entryPublished = extractor.TryGetValue("//atom:feed/atom:entry/atom:published/text()");
@@ -113,46 +118,32 @@ namespace HubsubscriberTests
             string entryLinkReplies = extractor.TryGetValue("//atom:feed/atom:entry/atom:link[@rel='replies']/@href");
         }
 
-        /// <summary>
-        ///A test for TryGetList
-        ///</summary>
-        // TODO: Ensure that the UrlToTest attribute specifies a URL to an ASP.NET page (for example,
-        // http://.../Default.aspx). This is necessary for the unit test to be executed on the web server,
-        // whether you are testing a page, web service, or a WCF service.
-        [TestMethod()]
-        public void TryGetListTest()
-        {
-            XmlDocument doc = null; // TODO: Initialize to an appropriate value
-            XmlNamespaceManager nsMgr = null; // TODO: Initialize to an appropriate value
-            ILoggingService loggingService = null; // TODO: Initialize to an appropriate value
-            XPathValueExtractorService target = new XPathValueExtractorService(doc, nsMgr, loggingService); // TODO: Initialize to an appropriate value
-            string xpath = string.Empty; // TODO: Initialize to an appropriate value
-            string expected = string.Empty; // TODO: Initialize to an appropriate value
-            string actual;
-            actual = target.TryGetList(xpath);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
+        //[TestMethod()]
+        //public void TryGetListTest()
+        //{
+        //    XmlDocument doc = null; // TODO: Initialize to an appropriate value
+        //    XmlNamespaceManager nsMgr = null; // TODO: Initialize to an appropriate value
+        //    XPathValueExtractorService target = new XPathValueExtractorService(doc, nsMgr, _loggingService); // TODO: Initialize to an appropriate value
+        //    string xpath = string.Empty; // TODO: Initialize to an appropriate value
+        //    string expected = string.Empty; // TODO: Initialize to an appropriate value
+        //    string actual;
+        //    actual = target.TryGetList(xpath);
+        //    Assert.AreEqual(expected, actual);
+        //    Assert.Inconclusive("Verify the correctness of this test method.");
+        //}
 
-        /// <summary>
-        ///A test for TryGetValue
-        ///</summary>
-        // TODO: Ensure that the UrlToTest attribute specifies a URL to an ASP.NET page (for example,
-        // http://.../Default.aspx). This is necessary for the unit test to be executed on the web server,
-        // whether you are testing a page, web service, or a WCF service.
-        [TestMethod()]
-        public void TryGetValueTest()
-        {
-            XmlDocument doc = null; // TODO: Initialize to an appropriate value
-            XmlNamespaceManager nsMgr = null; // TODO: Initialize to an appropriate value
-            ILoggingService loggingService = null; // TODO: Initialize to an appropriate value
-            XPathValueExtractorService target = new XPathValueExtractorService(doc, nsMgr, loggingService); // TODO: Initialize to an appropriate value
-            string xpath = string.Empty; // TODO: Initialize to an appropriate value
-            string expected = string.Empty; // TODO: Initialize to an appropriate value
-            string actual;
-            actual = target.TryGetValue(xpath);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
+        //[TestMethod()]
+        //public void TryGetValueTest()
+        //{
+        //    XmlDocument doc = null; // TODO: Initialize to an appropriate value
+        //    XmlNamespaceManager nsMgr = null; // TODO: Initialize to an appropriate value
+        //    XPathValueExtractorService target = new XPathValueExtractorService(doc, nsMgr, _loggingService); // TODO: Initialize to an appropriate value
+        //    string xpath = string.Empty; // TODO: Initialize to an appropriate value
+        //    string expected = string.Empty; // TODO: Initialize to an appropriate value
+        //    string actual;
+        //    actual = target.TryGetValue(xpath);
+        //    Assert.AreEqual(expected, actual);
+        //    Assert.Inconclusive("Verify the correctness of this test method.");
+        //}
     }
 }

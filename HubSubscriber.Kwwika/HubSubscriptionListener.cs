@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HubSubscriber.Services;
-using Kwwika.QueueComponents;
-using Kwwika.Common.Logging;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
-using System.Text.RegularExpressions;
+using HubSubscriber.Models;
+using HubSubscriber.Services;
+using Kwwika.Common.Logging;
+using Kwwika.QueueComponents;
 
 namespace HubSubscriber.Kwwika
 {
@@ -23,7 +20,7 @@ namespace HubSubscriber.Kwwika
 
         #region IHubSubscriptionListener Members
 
-        public void SubscriptionUpdateReceived(string update)
+        public void SubscriptionUpdateReceived(UserModel userModel, string update)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(update);
@@ -49,7 +46,7 @@ namespace HubSubscriber.Kwwika
             string entryLinkReplies = extractor.TryGetValue("//atom:feed/atom:entry/atom:link[@rel='replies']/@href");
 
 
-            var publishMessage = new PublishMessage("/KWWIKA/SANDBOX");
+            var publishMessage = new PublishMessage(userModel.PushTopic);
             publishMessage.Values.Add("feedUpdated", feedUpdated);
             publishMessage.Values.Add("entryPublished", entryPublished);
             publishMessage.Values.Add("entryId", entryId);

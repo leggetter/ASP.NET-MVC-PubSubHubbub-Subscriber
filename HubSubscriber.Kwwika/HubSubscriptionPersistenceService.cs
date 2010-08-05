@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HubSubscriber.Services;
-using HubSubscriber.Kwwika;
+using HubSubscriber.Models;
 using Kwwika.Common.Logging;
 
 namespace HubSubscriber.Kwwika
@@ -24,6 +24,19 @@ namespace HubSubscriber.Kwwika
 
         public void StoreSubscription(SubscriptionModel model)
         {
+            if (GetUser(model.PubSubHubUser) == null)
+            {
+                throw new InvalidOperationException("User does not exist.");
+            }
+
+            int maxSubsForUser = GetMaxSubscriptionsForUser(model.PubSubHubUser);
+            int userSubCount = GetSubscriptionCountForUser(model.PubSubHubUser);
+
+            if (userSubCount >= maxSubsForUser)
+            {
+                throw new InvalidOperationException("Storing this subscription would exceed the users subscription limit");
+            }
+
             lock (_dbAccessLock)
             {
                 Subscription newSubscription = _entities.CreateObject<Subscription>();
@@ -33,6 +46,7 @@ namespace HubSubscriber.Kwwika
                 newSubscription.Verify = model.Verify;
                 newSubscription.Topic = model.Topic;
                 newSubscription.LastUpdated = DateTime.Now;
+                newSubscription.PubSubHubUser = model.PubSubHubUser;
 
                 _loggingService.Info("Saving model to the database " + model);
 
@@ -43,12 +57,16 @@ namespace HubSubscriber.Kwwika
             }
         }
 
-        public IEnumerable<SubscriptionModel> GetSubscriptionsList()
+        public IEnumerable<SubscriptionModel> GetSubscriptionsList(string username)
         {
             IList<SubscriptionModel> subscriptionModels = new List<SubscriptionModel>();
             lock (_dbAccessLock)
             {
-                foreach (Subscription sub in _entities.SubscriptionsSet.ToList())
+                var subscriptions = from sub in _entities.SubscriptionsSet
+                                    where sub.PubSubHubUser == username
+                                    select sub;
+
+                foreach (Subscription sub in subscriptions)
                 {
                     subscriptionModels.Add(CreateSubscriptionModelFromSubscription(sub));
                 }
@@ -99,8 +117,44 @@ namespace HubSubscriber.Kwwika
                 sub.Topic = model.Topic;
                 sub.Verified = model.Verified;
                 sub.Verify = model.Verify;
+                sub.PubSubHubUser = model.PubSubHubUser;
 
                 _entities.SaveChanges();
+            }
+        }
+
+        public int GetMaxSubscriptionsForUser(string user)
+        {
+            lock (_dbAccessLock)
+            {
+                return _entities.UsersSet.First(u => u.PubSubHubUser == user).MaxHubSubscriptions;
+            }
+        }
+
+        public int GetSubscriptionCountForUser(string user)
+        {
+            lock (_dbAccessLock)
+            {
+                return _entities.SubscriptionsSet.Count(subs => subs.PubSubHubUser == user);
+            }
+        }
+
+        public UserModel GetUser(string username)
+        {
+            lock (_dbAccessLock)
+            {
+                UserModel model = null;
+                User user =  _entities.UsersSet.First(u => u.PubSubHubUser == username);
+                if (user != null)
+                {
+                    model = new UserModel()
+                    {
+                        Username = user.PubSubHubUser,
+                        PushTopic = user.KwwikaTopic,
+                        MaxHubSubscriptions = user.MaxHubSubscriptions
+                    };
+                }
+                return model;
             }
         }
         #endregion
@@ -117,7 +171,8 @@ namespace HubSubscriber.Kwwika
                 Verify = sub.Verify,
                 PendingDeletion = sub.PendingDeletion,
                 Verified = sub.Verified,
-                LastUpdated = sub.LastUpdated
+                LastUpdated = sub.LastUpdated,
+                PubSubHubUser = sub.PubSubHubUser
             };
 
             return model;

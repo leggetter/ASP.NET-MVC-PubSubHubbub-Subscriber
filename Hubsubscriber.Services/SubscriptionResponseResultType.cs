@@ -7,6 +7,7 @@ namespace HubSubscriber.Services
 {
     public enum SubscriptionResponseResultType
     {
+        NotAuthorised,
         Error,
         Success,
         NotFound

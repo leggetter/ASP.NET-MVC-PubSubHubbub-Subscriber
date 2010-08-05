@@ -1,10 +1,6 @@
 ﻿<%@ Page Title="" Language="C#"
     MasterPageFile="~/Views/Shared/Site.Master"
-    Inherits="System.Web.Mvc.ViewPage<HubSubscriber.Kwwika.SubscriptionModel>" %>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    Create a subscription
-</asp:Content>
+    Inherits="System.Web.Mvc.ViewPage<HubSubscriber.Models.SubscriptionModel>" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="main" runat="server">
     <% using (Html.BeginForm()) {%>
