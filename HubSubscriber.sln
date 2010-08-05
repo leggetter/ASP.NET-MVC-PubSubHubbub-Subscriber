@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{034361C5-B6B8-4E40-B9BB-83D6DFEA0465}"
+	ProjectSection(SolutionItems) = preProject
+		sql\hubsubscriber_Subscriptions.sql = sql\hubsubscriber_Subscriptions.sql
+		sql\hubsubscriber_Users.sql = sql\hubsubscriber_Users.sql
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubSubscriber", "Hubsubscriber\HubSubscriber.csproj", "{6137E480-0AF4-4FB6-A095-B82EDEC3D87D}"
 EndProject
