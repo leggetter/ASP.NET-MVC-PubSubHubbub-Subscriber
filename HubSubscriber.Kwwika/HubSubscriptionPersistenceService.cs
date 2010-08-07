@@ -144,15 +144,25 @@ namespace HubSubscriber.Kwwika
             lock (_dbAccessLock)
             {
                 UserModel model = null;
-                User user =  _entities.UsersSet.First(u => u.PubSubHubUser == username);
-                if (user != null)
+                try
                 {
-                    model = new UserModel()
+                    if (_entities.UsersSet.Count(u => u.PubSubHubUser == username) == 1)
                     {
-                        Username = user.PubSubHubUser,
-                        PushTopic = user.KwwikaTopic,
-                        MaxHubSubscriptions = user.MaxHubSubscriptions
-                    };
+                        User user = _entities.UsersSet.First(u => u.PubSubHubUser == username);
+                        if (user != null)
+                        {
+                            model = new UserModel()
+                            {
+                                Username = user.PubSubHubUser,
+                                PushTopic = user.KwwikaTopic,
+                                MaxHubSubscriptions = user.MaxHubSubscriptions
+                            };
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _loggingService.Error("Exception in GetUser: " + ex.ToString());
                 }
                 return model;
             }

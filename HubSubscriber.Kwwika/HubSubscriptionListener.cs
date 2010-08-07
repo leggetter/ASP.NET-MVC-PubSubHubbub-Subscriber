@@ -20,7 +20,7 @@ namespace HubSubscriber.Kwwika
 
         #region IHubSubscriptionListener Members
 
-        public void SubscriptionUpdateReceived(UserModel userModel, string update)
+        public void SubscriptionUpdateReceived(SubscriptionModel subscription, string update)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(update);
@@ -33,8 +33,8 @@ namespace HubSubscriber.Kwwika
             string entryId = extractor.TryGetValue("//atom:feed/atom:entry/atom:id/text()");
             string entryTitle = extractor.TryGetValue("//atom:feed/atom:entry/atom:title/text()");
             string entryContent = extractor.TryGetValue("//atom:feed/atom:entry/atom:content/text()");
-            entryContent = Regex.Replace(entryContent, @"((<[\s\/]*script\b[^>]*>)([^>]*)(<\/script>))", "", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            if (entryContent.Length > 25000)
+            entryContent = Regex.Replace(entryContent, "<script.*?</script>", "",RegexOptions.Singleline|RegexOptions.IgnoreCase);
+            if (entryContent.Length > Config.TrimEntryContentLength)
             {
                 entryContent = entryContent.Substring(0, Config.TrimEntryContentLength);
 
@@ -46,7 +46,7 @@ namespace HubSubscriber.Kwwika
             string entryLinkReplies = extractor.TryGetValue("//atom:feed/atom:entry/atom:link[@rel='replies']/@href");
 
 
-            var publishMessage = new PublishMessage(userModel.PushTopic);
+            var publishMessage = new PublishMessage(subscription.PushTopic);
             publishMessage.Values.Add("feedUpdated", feedUpdated);
             publishMessage.Values.Add("entryPublished", entryPublished);
             publishMessage.Values.Add("entryId", entryId);
@@ -55,6 +55,9 @@ namespace HubSubscriber.Kwwika
             publishMessage.Values.Add("entryAuthors", entryAuthors);
             publishMessage.Values.Add("entryLinkAlternate", entryLinkAlt);
             publishMessage.Values.Add("entryLinkReplies", entryLinkReplies);
+
+            publishMessage.Values.Add("subscriptionTopic", subscription.Topic);
+            publishMessage.Values.Add("subscriptionId", subscription.Id.ToString());
 
             _queueWriter.Write(publishMessage);
         }

@@ -11,6 +11,9 @@
 
 </head>
 <body>
+
+<asp:ContentPlaceHolder ID="MessageContent" runat="server" />
+
 <div id="wrapper">
     <div id="header">	 
 	    <asp:ContentPlaceHolder ID="HeaderContent" runat="server" /> 
@@ -25,7 +28,7 @@
     </div>
 
     <div id="footer">
-        <p>This is the Footer</p>		
+        <asp:ContentPlaceHolder ID="FooterContent" runat="server"/>		
     </div>
 
 </div>

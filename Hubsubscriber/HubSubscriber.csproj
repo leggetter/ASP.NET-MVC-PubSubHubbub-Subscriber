@@ -120,6 +120,7 @@
     <Content Include="Content\Images\blue_gloss_btn.png" />
     <Content Include="Content\Images\blue_gloss_hover_btn.png" />
     <Content Include="Content\Images\content-back.png" />
+    <Content Include="Content\Images\delete.png" />
     <Content Include="Content\Images\header-back.png" />
     <Content Include="Content\Images\link_arrow.png" />
     <Content Include="Content\Images\placeholder.png" />
@@ -133,6 +134,9 @@
     <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine-en.js" />
     <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine-fr.js" />
     <Content Include="Content\js\formValidator.1.7\js\jquery.validationEngine.js" />
+    <Content Include="Content\js\kwwika-hubsubscriber.js" />
+    <Content Include="Content\js\kwwika\hubsubscriber\HtmlGenerator.js" />
+    <Content Include="Content\js\kwwika\hubsubscriber\RealTimeSubscriber.js" />
     <Content Include="Content\style.css" />
     <Content Include="ElmahLogs\placeholder.txt" />
     <Content Include="Global.asax" />

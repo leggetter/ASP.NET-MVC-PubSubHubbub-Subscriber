@@ -95,8 +95,8 @@ namespace HubSubscriber.Controllers
 
             string query = "hub.mode=" + model.Mode + "&";
             query += "hub.verify=" + model.Verify + "&";
-            query += "hub.callback=" + model.Callback + "/" + model.Id + "&";
-            query += "hub.topic=" + model.Topic;
+            query += "hub.callback=" + Uri.EscapeDataString(model.Callback) + "/" + model.Id + "&";
+            query += "hub.topic=" + Uri.EscapeDataString(model.Topic);
             builder.Query = query;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(builder.Uri);

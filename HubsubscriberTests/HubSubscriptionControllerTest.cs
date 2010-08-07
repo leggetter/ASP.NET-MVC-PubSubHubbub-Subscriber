@@ -314,7 +314,7 @@ namespace HubsubscriberTests
                 _subscriptionPersistenceService.Expect(x => x.GetSubscriptionById(detailsId)).Return(model);
                 _subscriptionPersistenceService.Expect(x => x.GetSubscriptionCountById(detailsId)).Return(1);
                 _subscriptionPersistenceService.Expect(x => x.GetUser(model.PubSubHubUser)).Return(userModel);
-                _subscriptionListener.Expect(x => x.SubscriptionUpdateReceived(userModel, updateContents));
+                _subscriptionListener.Expect(x => x.SubscriptionUpdateReceived(model, updateContents));
                 _subscriptionPersistenceService.Expect(x => x.SaveChanges(model));
 
             }).Verify(delegate

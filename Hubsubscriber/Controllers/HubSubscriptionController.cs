@@ -304,11 +304,16 @@ namespace HubSubscriber.Controllers
                     }
                     else
                     {
-                        _loggingService.Info("Received subscription update for ID: " + id);                        
+                        _loggingService.Info("Received subscription update for ID: " + id);
 
-                        UserModel model = _subscriptionPersistenceService.GetUser(sub.PubSubHubUser);
+                        if (string.IsNullOrEmpty(sub.PushTopic) == true)
+                        {
+                            // Use the default user push topic
+                            UserModel model = _subscriptionPersistenceService.GetUser(sub.PubSubHubUser);
+                            sub.PushTopic = model.PushTopic;
+                        }
                         string documentContents = GetDocumentContents(Request);
-                        _hubSubscriptionListener.SubscriptionUpdateReceived(model, documentContents);
+                        _hubSubscriptionListener.SubscriptionUpdateReceived(sub, documentContents);
                         
                         Response.StatusCode = (int)HttpStatusCode.OK;
                         view = View();
@@ -340,7 +345,6 @@ namespace HubSubscriber.Controllers
                  if (_subscriptionPersistenceService.GetSubscriptionCountById(id) != 1)
                  {
                      _loggingService.Error("Error finding subscription for id: " + id + ". Simply echoing challenge to confirm the deletion");
-                     Response.StatusCode = (int)HttpStatusCode.NotFound;
                  }
                  else
                  {

@@ -7,9 +7,24 @@
 
 * { padding: 0; margin: 0; }
 
+#loading{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5000;
+    background-color: red;
+    font-size: 150%;
+    color: white;
+    padding: 2px;
+    
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
 body {
 	 font-family: Verdana, Arial, Helvetica, sans-serif;
 	 font-size: 13px;
+	 background-color: #333333;
 }
 
 p {
@@ -24,6 +39,20 @@ p {
 #logout
 {
     cursor: pointer;
+    text-decoration: underline;
+}
+
+#userinfo_wrapper
+{
+    padding-top: 20px;
+    margin: auto;
+    text-align: center;   
+}
+
+#userinfo_wrapper h3
+{
+    font-size: 20px;
+    margin: 30px;
 }
 
 #wrapper { 
@@ -32,13 +61,190 @@ p {
 	 background-image:url(Images/side-back.png);
 }
 
+#login_wrapper a
+{
+    font-weight: bold;
+}
+
 #header {
 	 color: #333;
 	 width: 100%;
 	 float: left;
 	 height: 256px;
 	 background-image:url(Images/header-back.png);
-	 background-repeat:repeat-x;
+	 background-repeat:repeat-x;	 
+}
+
+#shared_account_warning
+{
+    background-color: #4FA2C1;
+    border-bottom: 1px solid #000;
+    
+    color: #FFF;
+}
+
+#shared_account_warning a
+{
+    color: #fff;
+}
+
+#shared_account_warning p
+{
+    font-size:12px;
+    line-height:16px;
+    padding:5px;
+}
+
+#header_content
+{    
+    width: 800px;
+    margin: auto;
+    margin-top: 30px;
+    overflow: auto;
+}
+
+#login_wrapper
+{
+    width: 294px;
+    height: 174px;
+    float: left;
+    background-color: #EBEBEB;
+    border: 3px solid #FFF;
+}
+
+#login_area .superfeedr
+{
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#login_area .superfeedr span:first-child
+{
+    font-size: 12px;
+}
+
+#login_area .superfeedr span
+{
+    font-size: 10px;
+}
+
+#loginform .label
+{
+    width: 75px;
+    margin-right: 10px;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#loginform input
+{
+    font-size: 16px;
+    height: 30px;
+}
+
+#loginform input[type=text], #loginform input[type=password]
+{
+    width: 180px;
+}
+
+#loginform input[type=submit]
+{
+    float: right;
+    margin-right: 20px;
+}
+
+#create_subscription
+{
+    width: 454px;
+    height: 174px;
+    
+    background-color: gray;
+    color: #FFF;
+    border: 3px solid #000;
+    float: left;
+    
+    margin-right: 22px;
+}
+
+#create_subscription form
+{
+}
+
+#create_subscription p:first-child
+{
+    font-size: 24px;
+    font-family: bold;
+    text-align: center;
+}
+
+#create_subscription input[type=text]
+{
+    width: 380px;
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+#create_subscription input[type=text],
+#create_subscription input[type=submit]
+{
+    height: 30px;
+    font-size: 16px;
+}
+
+#no_feed_items_notice
+{
+    margin-left: 28px;
+    margin-top: 30px;
+    font-weight: bold;
+    
+    position:relative;
+	border-style:solid;
+	border-width:1px;
+	border-color:#555;
+	padding: 3px 20px 3px 20px;
+ 	color: #333;
+	background: #6e6e6e;
+	background: -webkit-gradient(linear, left top, left bottom, from(#e8e8e8), to(#bcbcbc));
+	background: -moz-linear-gradient(top,  #e8e8e8,  #bcbcbc);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#e8e8e8', endColorstr='#bcbcbc');
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:12px;
+	text-shadow:0px 1px 0px #fff;
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+
+#leftcolumn h2, #content h2
+{
+    margin-left: 28px;
+    margin-top: 15px;
+}
+
+#leftcolumn h2
+{
+    color: #E9E9E9;
+}
+
+#content h2
+{
+    color: #727272;
 }
 
 #content { 
@@ -48,6 +254,12 @@ p {
 	 background-repeat:repeat;
 	 width: 65%;
 	 display: inline;
+}
+
+#leftcolumn, #content
+{
+    /*height: 500px;
+	overflow-y: auto;*/
 }
 
 .topic-title {
@@ -117,18 +329,20 @@ p {
 
 
 .topic-tri {
-	color: #bbb;
 	text-shadow:0px 0px 0px #333;
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size:14px;
-	float:left;
 	margin-right: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 12px;
 	background-image:url(Images/topic_tri.png);
 	background-position: bottom;
 	background-repeat:no-repeat;
 }
 
+.topic-tracking
+{
+    	color: #bbb;
+}
 
 .topic-box { 
 	border-style:solid;
@@ -167,7 +381,7 @@ p {
 	padding-top: 15px;
 	color: #fff;
 	width: 300px;
-	float:right;
+	margin-left: 28px;
 }
 
 #edit {
@@ -235,7 +449,7 @@ p {
 	border-width:1px;
 	border-color:#555;
 	margin: 5px 2px;
-	padding: 3px 15px 3px 15px;
+	padding: 3px 20px 3px 20px;
  	color: #333;
 	background: #6e6e6e;
 	background: -webkit-gradient(linear, left top, left bottom, from(#e8e8e8), to(#bcbcbc));
@@ -267,7 +481,7 @@ p {
 .keyword span img
 {
     position: absolute;
-    top: 4px;
+    top: 5px;
     right: 3px;
     display: none;
 }
@@ -304,4 +518,40 @@ p {
 	 clear: both;
 	 color: #999;
 	 background: #333;
+	 color: #fff;
+}
+
+#footer a
+{
+    color: #4FA2C1;
+}
+
+#footer h3
+{
+    padding: 0;
+    font-size: 14px;
+    color: #E3E3E3;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#footer p
+{
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+#left_footer, #right_footer
+{
+    padding-top: 10px;
+    margin-left: 28px;
+    margin-right: 28px;
+    width: 45%;
+    float: left;
+}
+
+#right_footer ul
+{
+    margin-bottom: 20px;
 }

@@ -53,5 +53,7 @@ namespace HubSubscriber.Models
         public DateTime? LastUpdated { get; set; }
 
         public string PubSubHubUser { get; set; }
+
+        public string PushTopic { get; set; }
     }
 }
