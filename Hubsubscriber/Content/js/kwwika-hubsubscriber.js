@@ -1,7 +1,7 @@
 ﻿$(window).load(function ()
 {
     var realTimeSubscriber;
-    var htmlGenerator = new kwwika.hubsubscriber.HtmlGenerator();
+    var htmlGenerator = new kwwika.hubsubscriber.HtmlGenerator( "feed_items", "leftcontent", deleteSubscription);
 
     function clearSubscriptionsUI()
     {
@@ -33,7 +33,7 @@
         {
             realTimeSubscriber.unsubscribe();
         }
-        realTimeSubscriber = new kwwika.hubsubscriber.RealTimeSubscriber(user.pushTopic, "feed_items", htmlGenerator);
+        realTimeSubscriber = new kwwika.hubsubscriber.RealTimeSubscriber(user.PushTopic, htmlGenerator);
         realTimeSubscriber.subscribe();
     };
 
@@ -66,10 +66,7 @@
 
     function addSubscriptionToUI(sub)
     {
-        var subEl = createSubscriptionHtml(sub);
-        subEl.hide();
-        $("#leftcontent").append(subEl);
-        subEl.fadeIn();
+        htmlGenerator.addSubscription(sub, deleteSubscription);
     };
 
     function deleteSubscription()
@@ -102,25 +99,12 @@
                     if ((data.Type == 2 || data.Type == 3) &&
                                 data.Subscription)
                     {
-                        $("#subscription_" + data.Subscription.Id).fadeOut(function ()
-                        {
-                            $(this).remove();
-                            if ($("#leftcontent .keyword").size() == 0)
-                            {
-                                $("#no_feed_items_notice").show();
-                            }
-                        });
+                        htmlGenerator.removeSubscription(data.Subscription);
                     }
                 }
             }
         });
     }
-
-    function createSubscriptionHtml(sub)
-    {
-        var keyword = htmlGenerator.createKeywordElement(sub, deleteSubscription);
-        return keyword;
-    };
 
     function init()
     {
@@ -195,7 +179,7 @@
 
         if (track.match("^http:\/\/") == null)
         {
-            track = "http://superfeedr.com/track/" + track;
+            track = "http://superfeedr.com/track/" + track.replace(" ", "-");
         }
 
         var subscriptionModel = {
@@ -224,8 +208,6 @@
 
                     if (data.Subscription)
                     {
-                        $("#no_feed_items_notice").hide();
-
                         addSubscriptionToUI(data.Subscription);
                     }
                 }

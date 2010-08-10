@@ -1,11 +1,9 @@
 ﻿kwwika.namespace("kwwika.hubsubscriber");
 
-kwwika.hubsubscriber.RealTimeSubscriber = function(realTimeTopic, feedItemsParentId, htmlGenerator)
+kwwika.hubsubscriber.RealTimeSubscriber = function(realTimeTopic, htmlGenerator)
 {
-    this.realTimeTopic = realTimeTopic;
-    this.feedItemsParentId = feedItemsParentId;
+    this.realTimeTopic = realTimeTopic;   
     this.htmlGenerator = htmlGenerator;
-    this.maxNewsItems = 20;
 };
 kwwika.hubsubscriber.RealTimeSubscriber.prototype.subscribe = function()
 {
@@ -15,16 +13,20 @@ kwwika.hubsubscriber.RealTimeSubscriber.prototype.subscribe = function()
 
 kwwika.hubsubscriber.RealTimeSubscriber.prototype.topicUpdated = function (sub, update)
 {
-    var newsItem = this.createNewsItem(update);
-    newsItem.hide();
-    $("#" + this.feedItemsParentId).prepend(newsItem);
-    newsItem.slideDown();
-    //$("#feed_updated").html(update.feedUpdated);
-
-    var newsItems = $("#" + this.feedItemsParentId + " .topic-box");
-    if(newsItems.size() > this.maxNewsItems)
+    if( this.isValidSubscription(update.subscriptionCreated) )
     {
-        newsItems.last().remove();
+        var model = JSON.parse(update.subscriptionCreated);
+        this.htmlGenerator.addSubscription(model);
+    }
+    else if( this.isValidSubscription(update.subscriptionDeleted) )
+    {
+        var model = JSON.parse(update.subscriptionDeleted);
+        this.htmlGenerator.removeSubscription(model);
+    }
+    
+    if(update.entryTitle)
+    {
+        this.htmlGenerator.updateReceived(update);
     }
 };
 
@@ -33,12 +35,12 @@ kwwika.hubsubscriber.RealTimeSubscriber.prototype.topicError = function (sub, er
     alert("Error subscribing to " + sub.topicName + ": " + error);
 };
 
-kwwika.hubsubscriber.RealTimeSubscriber.prototype.createNewsItem = function(update)
-{
-    return this.htmlGenerator.createItemElement(update);
-};
-
 kwwika.hubsubscriber.RealTimeSubscriber.prototype.unsubscribe = function()
 {
     this.connection.unsubscribe(this.newsSubscription);
+};
+
+kwwika.hubsubscriber.RealTimeSubscriber.prototype.isValidSubscription = function(sub)
+{
+    return sub && sub != "null";
 };

@@ -95,12 +95,16 @@ namespace HubSubscriber.Kwwika
 
         public SubscriptionModel GetSubscriptionById(int id)
         {
+            SubscriptionModel model = null;
             lock (_dbAccessLock)
             {
-                Subscription sub = _entities.SubscriptionsSet.First(m => m.Id == id);
-                SubscriptionModel model = CreateSubscriptionModelFromSubscription(sub);
-                return model;
+                if (_entities.SubscriptionsSet.Count(u => u.Id == id) == 1)
+                {
+                    Subscription sub = _entities.SubscriptionsSet.First(m => m.Id == id);
+                    model = CreateSubscriptionModelFromSubscription(sub);
+                }
             }
+            return model;
         }
 
         public void SaveChanges(SubscriptionModel model)

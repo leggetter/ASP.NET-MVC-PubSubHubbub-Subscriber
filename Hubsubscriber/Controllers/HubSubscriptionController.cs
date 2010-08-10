@@ -163,6 +163,7 @@ namespace HubSubscriber.Controllers
             JsonResult jsonResult = null;
             try
             {
+                model.PushTopic = model.PushTopic ?? SubscriptionUser.PushTopic;
                 model.Callback = model.Callback ?? Request.Url.GetLeftPart(UriPartial.Authority) + GetAppPath() + Url.Action("HubUpdate", "HubSubscription");
                 model.Mode = model.Mode ?? "subscribe";
                 model.Verify = model.Verify ?? "sync";
@@ -187,7 +188,7 @@ namespace HubSubscriber.Controllers
                     if (userSubCount >= maxSubsForUser)
                     {
                         string msg = 
-                            string.Format("Maximum number of subscriptions reaced for user. Subscriptions in use {0}. Maximum subscriptions {1}.",
+                            string.Format("Maximum number of subscriptions reached for user. Subscriptions in use {0}. Maximum subscriptions {1}.",
                                 userSubCount, maxSubsForUser);
                         
                         jsonResult = Json(new SubscriptionServiceResult()
@@ -199,8 +200,22 @@ namespace HubSubscriber.Controllers
                     else
                     {
                         _subscriptionPersistenceService.StoreSubscription(model);
-
+                  
                         SubscriptionServiceResult result = _subscriptionService.Subscribe(HubConfiguration, model);
+
+                        if (result.Type == SubscriptionResponseResultType.Success)
+                        {
+                            try
+                            {
+                                _hubSubscriptionListener.SubscriptionCreated(model);
+                            }
+                            catch (Exception ex)
+                            {
+                                _loggingService.Error("Error calling subscription listener: " + ex);
+                            }
+
+                                                        
+                        }
 
                         jsonResult = Json(result);
                     }
@@ -236,6 +251,7 @@ namespace HubSubscriber.Controllers
                 model.PendingDeletion = true;
                 model.LastUpdated = DateTime.Now;
                 model.Mode = "unsubscribe";
+                model.PushTopic = model.PushTopic ?? SubscriptionUser.PushTopic;
                 _subscriptionPersistenceService.SaveChanges(model);
 
                 SubscriptionServiceResult result = _subscriptionService.UnSubscribe(HubConfiguration, model);
@@ -244,10 +260,20 @@ namespace HubSubscriber.Controllers
                 {
                     _subscriptionPersistenceService.DeleteSubscriptionById(id);
 
+                    try
+                    {
+                        _hubSubscriptionListener.SubscriptionDeleted(model);
+                    }
+                    catch (Exception ex)
+                    {
+                        _loggingService.Error("Error calling subscription listener: " + ex);
+                    }
+
                     string msg = "The subscription could not be found in the subscription service. Deleted anyway. " +
                         result.ErrorDescription;
                     _loggingService.Error(msg);
                 }
+
                 jsonResult = Json(result);
             }            
             catch (Exception ex)
@@ -342,13 +368,29 @@ namespace HubSubscriber.Controllers
 
              try
              {
-                 if (_subscriptionPersistenceService.GetSubscriptionCountById(id) != 1)
+                 var model = _subscriptionPersistenceService.GetSubscriptionById(id);
+                 if (model == null)
                  {
                      _loggingService.Error("Error finding subscription for id: " + id + ". Simply echoing challenge to confirm the deletion");
                  }
                  else
                  {
                      _subscriptionPersistenceService.DeleteSubscriptionById(id);
+
+                     try
+                     {
+                         if (string.IsNullOrEmpty(model.PushTopic) == true)
+                         {
+                             // Use the default user push topic
+                             UserModel user = _subscriptionPersistenceService.GetUser(model.PubSubHubUser);
+                             model.PushTopic = user.PushTopic;
+                         }
+                         _hubSubscriptionListener.SubscriptionDeleted(model);
+                     }
+                     catch (Exception ex)
+                     {
+                         _loggingService.Error("Error calling subscription listener: " + ex);
+                     }
 
                      _loggingService.Info("Deleted subscription Id: " + id);
 

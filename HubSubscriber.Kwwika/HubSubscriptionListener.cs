@@ -4,6 +4,9 @@ using HubSubscriber.Models;
 using HubSubscriber.Services;
 using Kwwika.Common.Logging;
 using Kwwika.QueueComponents;
+using System.IO;
+using System.Text;
+using System.Runtime.Serialization.Json;
 
 namespace HubSubscriber.Kwwika
 {
@@ -62,6 +65,46 @@ namespace HubSubscriber.Kwwika
             _queueWriter.Write(publishMessage);
         }
 
+        public void SubscriptionCreated(SubscriptionModel model)
+        {
+            _loggingService.Info("Sending subscriptionCreated for :" + ModelToString(model));
+
+            var publishMessage = new PublishMessage(model.PushTopic);
+            publishMessage.Values.Add("subscriptionCreated", SubscriptionToJson(model));
+            _queueWriter.Write(publishMessage);
+
+            publishMessage = new PublishMessage(model.PushTopic);
+            publishMessage.Values.Add("subscriptionCreated", "null");
+            _queueWriter.Write(publishMessage);
+        }
+
+        public void SubscriptionDeleted(SubscriptionModel model)
+        {
+            _loggingService.Info("Sending subscriptionDeleted for :" + ModelToString(model));
+
+            var publishMessage = new PublishMessage(model.PushTopic);
+            publishMessage.Values.Add("subscriptionDeleted", SubscriptionToJson(model));
+            _queueWriter.Write(publishMessage);
+
+            publishMessage = new PublishMessage(model.PushTopic);
+            publishMessage.Values.Add("subscriptionDeleted", "null");
+            _queueWriter.Write(publishMessage);
+        }
+
         #endregion
+
+        private static string ModelToString(SubscriptionModel model)
+        {
+            return "Topic: " + model.Topic + " PushTopic:" + model.PushTopic + " ID:" + model.Id;
+        }
+
+        private static string SubscriptionToJson(SubscriptionModel model)
+        {
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(model.GetType());
+            MemoryStream ms = new MemoryStream();
+            serializer.WriteObject(ms, model);
+            string json = Encoding.Default.GetString(ms.ToArray());
+            return json;
+        }
     }
 }

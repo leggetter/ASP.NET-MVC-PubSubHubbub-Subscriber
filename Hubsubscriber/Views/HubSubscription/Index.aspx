@@ -9,9 +9,9 @@
 <asp:Content ContentPlaceHolderID="HeadContent" runat="server">
     <script>
     var user = {
-            pushTopic: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).PushTopic %>',
-            username: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Username %>',
-            status: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Status %>'
+            PushTopic: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).PushTopic %>',
+            Username: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Username %>',
+            Status: '<%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Status %>'
         };
         
     var service = {
@@ -24,6 +24,7 @@
     </script>
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script src="http://d1eqzjbvoh1rux.cloudfront.net/json2.min.js"></script>
 
     <link href="../../Content/js/formValidator.1.7/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
     <script src="../../Content/js/formValidator.1.7/js/jquery.validationEngine-en.js" type="text/javascript"></script>
@@ -43,7 +44,7 @@
         <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo#TOC-How-to-get-your-own-dedicated-demo">Here's how to get one</a>.</p>
     </div>
 
-    <div id="loading">Loading...</div>
+    <div id="loading">Loading...</div>    
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="HeaderContent" runat="server">
@@ -84,6 +85,7 @@
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="LeftColumnContent" runat="server">
+    <div id="info_message"></div>
 
  	<h2>Tracking</h2>
     <div id="no_feed_items_notice" class="hidden">No Keywords or RSS feeds are being tracked.</div> 
@@ -103,6 +105,7 @@
 <asp:Content ContentPlaceHolderID="FooterContent" runat="server">
 
 <div id="left_footer">
+    <a name="how_built"></a>
     <h3>How was this demo built</h3>
     <p>The demo relies on two key real-time web services; <a href="http://superfeedr.com">Superfeedr</a> and <a href="http://kwwika.com">Kwwika</a>.</p>
     <p>The demo uses Superfeedr to subscribe to both RSS feeds and track the contents of thousands of RSS feeds for keywords. When Superfeedr receives

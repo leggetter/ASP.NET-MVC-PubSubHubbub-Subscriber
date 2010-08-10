@@ -21,6 +21,22 @@
 	font-size: 12px;
 }
 
+#info_message
+{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5000;
+    background-color: #FFF1A8;
+    font-size: 150%;
+    color: #000;
+    padding: 2px;
+    
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;    
+}
+
 body {
 	 font-family: Verdana, Arial, Helvetica, sans-serif;
 	 font-size: 13px;
@@ -258,8 +274,8 @@ p {
 
 #leftcolumn, #content
 {
-    /*height: 500px;
-	overflow-y: auto;*/
+    height: 500px;
+	overflow-y: auto;
 }
 
 .topic-title {
@@ -374,6 +390,7 @@ p {
 	 height: 100%;
 	 width: 35%;
 	 float: left;
+	 position: relative;
 	/* background-image:url(Images/side-back.png);*/
 }
 
