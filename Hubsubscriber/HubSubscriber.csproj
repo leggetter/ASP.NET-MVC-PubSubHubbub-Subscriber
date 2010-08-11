@@ -123,6 +123,7 @@
     <Content Include="Content\Images\delete.png" />
     <Content Include="Content\Images\header-back.png" />
     <Content Include="Content\Images\link_arrow.png" />
+    <Content Include="Content\Images\openclose-icon-16x32.gif" />
     <Content Include="Content\Images\placeholder.png" />
     <Content Include="Content\Images\side-back.png" />
     <Content Include="Content\Images\topic_tri.png" />

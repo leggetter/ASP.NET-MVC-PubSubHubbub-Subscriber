@@ -66,13 +66,12 @@ kwwika.hubsubscriber.HtmlGenerator.prototype.createKeywordElement = function(sub
     var img = this.createDeleteButtonElement(sub);    
     var topic = this.getUrlOrKeyword(sub.Topic);    
 
-    var keyword = $('<div id="subscription_' + sub.Id + '" class="keyword" title="' + topic + '">' + 
-                            '<span>' +
+    var keyword = $('<div class="keyword" title="' + topic + '">' + 
+                            '<span id="subscription_' + sub.Id + '" >' +
                                 (topic.length > 35?topic.substring(0, 35) + '...':topic) +                             
                             '</span>' +
                         '</div>');
-    keyword.find("span").append(img);
-    keyword.click(deleteClickHandler);
+    keyword.find("span").append(img).click(deleteClickHandler);
     return keyword;
 };
 

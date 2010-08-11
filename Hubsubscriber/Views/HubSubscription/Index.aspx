@@ -76,12 +76,66 @@
             <div id="userinfo_wrapper" <%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Status == "LoggedIn"?"":"class=\"hidden\"" %>>
                 Welcome, <h3 class="username"><%= ((HubSubscriber.Models.UserInfoModel)ViewData["UserInfo"]).Username%></h3><div id="logout">Logout</div>
             </div>
-            <p><a href="#how_built">How was this built?</a></p>
+            
         </div>
         
+    </div>
+
+    <div id="information">
+        <div id="information_bar">
+            <a href="#how_built">How was this built?</a>
+            <iframe src="http://www.facebook.com/widgets/like.php?href=http://superfeedr.kwwika.com/&colorscheme=dark"
+                scrolling="no" frameborder="0"></iframe>
+        </div>
+        <div id="information_content">
+            <div class="left">
+                <a name="how_built"></a>
+                <h3>How was this demo built</h3>
+                <p>The demo relies on two key real-time web services; <a href="http://superfeedr.com">Superfeedr</a> and <a href="http://kwwika.com">Kwwika</a>.</p>
+                <p>The demo uses Superfeedr to subscribe to both RSS feeds and track the contents of thousands of RSS feeds for keywords. When Superfeedr receives
+                an update to either an RSS feed or finds a keyword that the demo is interested in it instantly pushes it to the web server that this
+                demo is being served from. When the web server receives an update we instantly push that update through the Kwwika service so that it can
+                push that update to all the client users (web browsers) interested in that update.</p>
+                <p>For more information see the <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo">Kwwika-Superfeedr Wiki page</a>.</p>
+
+                <h3>Get the source code</h3>
+                <p>If you'd like to build your own demo, or better yet, your own application based on this really cool technology then you
+                can download the source code from <a href="http://github.com/kwwika/ASP.NET-MVC-PubSubHubbub-Subscriber/tree/Kwwika-Superfeedr-Demo">GitHub</a>.</p>
+                <p>Once you have the source code you can follow <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo">these instructions</a> to help you get
+                set up running the demo application and building your own Kwwika &amp; Superfeedr powered Real-Time Web application.</p>
+            </div>
+
+            <div class="right">
+                <div id="dedicated_demo">
+                    <h3>How to get your own dedicated demo</h3>
+                    To get your own dedicated demo you'll need to have a <a href="http://superfeedr.com/subscriber">Superfeedr Subscriber</a>
+                    account and have <a href="http://kwwika.com/#getbeta">registered with Kwwika</a>. The process is simple. For more details
+                    check out <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo#TOC-How-to-get-your-own-dedicated-demo">the Kwwika wiki</a>.
+                </div>
+                <div id="social">
+                    <h3>Links</h3>
+                    <div id="social_twitter">
+                        <h4>Kwwika</h4>
+                        <ul>
+                            <li><a href="http://kwwika.com">Kwwika</a></li>
+                            <li><a class="twitter-link" href="http://twitter.com/Kwwika">Kwwika on Twitter</a></li>
+                            <li><a href="http://blog.kwwika.com">Kwwika Blog</a></li>
+                        </ul>
+                    </div>
+                    <div id="social_superfeedr">
+                        <h4>Superfeedr</h4>
+                        <ul>
+                            <li><a href="http://superfeedr.com">Superfeedr</a></li>
+                            <li><a class="twitter-link" href="http://twitter.com/Superfeedr">Superfeedr on Twitter</a></li>
+                            <li><a href="http://blog.superfeedr.com">Superfeedr Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
-    	
+	
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="LeftColumnContent" runat="server">
@@ -103,50 +157,5 @@
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="FooterContent" runat="server">
-
-<div id="left_footer">
-    <a name="how_built"></a>
-    <h3>How was this demo built</h3>
-    <p>The demo relies on two key real-time web services; <a href="http://superfeedr.com">Superfeedr</a> and <a href="http://kwwika.com">Kwwika</a>.</p>
-    <p>The demo uses Superfeedr to subscribe to both RSS feeds and track the contents of thousands of RSS feeds for keywords. When Superfeedr receives
-    an update to either an RSS feed or finds a keyword that the demo is interested in it instantly pushes it to the web server that this
-    demo is being served from. When the web server receives an update we instantly push that update through the Kwwika service so that it can
-    push that update to all the client users (web browsers) interested in that update.</p>
-    <p>For more information see the <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo">Kwwika-Superfeedr Wiki page</a>.</p>
-
-    <h3>Get the source code</h3>
-    <p>If you'd like to build your own demo, or better yet, your own application based on this really cool technology then you
-    can download the source code from <a href="http://github.com/kwwika/ASP.NET-MVC-PubSubHubbub-Subscriber/tree/Kwwika-Superfeedr-Demo">GitHub</a>.</p>
-    <p>Once you have the source code you can follow <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo">these instructions</a> to help you get
-    set up running the demo application and building your own Kwwika &amp; Superfeedr powered Real-Time Web application.</p>
-</div>
-
-<div id="right_footer">
-    <div id="dedicated_demo">
-        <h3>How to get your own dedicated demo</h3>
-        To get your own dedicated demo you'll need to have a <a href="http://superfeedr.com/subscriber">Superfeedr Subscriber</a>
-        account and have <a href="http://kwwika.com/#getbeta">registered with Kwwika</a>. The process is simple. For more details
-        check out <a href="http://wiki.kwwika.com/demos/kwwika-superfeedr-demo#TOC-How-to-get-your-own-dedicated-demo">the Kwwika wiki</a>.
-    </div>
-    <div id="social">
-        <h3>Links</h3>
-        <div id="social_twitter">
-            <h4>Kwwika</h4>
-            <ul>
-                <li><a href="http://kwwika.com">Kwwika</a></li>
-                <li><a class="twitter-link" href="http://twitter.com/Kwwika">Kwwika on Twitter</a></li>
-                <li><a href="http://blog.kwwika.com">Kwwika Blog</a></li>
-            </ul>
-        </div>
-        <div id="social_superfeedr">
-            <h4>Superfeedr</h4>
-            <ul>
-                <li><a href="http://superfeedr.com">Superfeedr</a></li>
-                <li><a class="twitter-link" href="http://twitter.com/Superfeedr">Superfeedr on Twitter</a></li>
-                <li><a href="http://blog.superfeedr.com">Superfeedr Blog</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
+    Built using <a href="http://kwwika.com">Kwwika</a> and <a href="http://superfeedr.com">Superfeedr</a>
 </asp:Content>

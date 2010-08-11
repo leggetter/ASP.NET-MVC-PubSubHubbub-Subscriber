@@ -73,8 +73,8 @@
     {
         if (!confirm("Are you sure you wish to delete this subscription?")) return false;
 
-        var img = $(this);
-        var id = img.attr("id");
+        var span = $(this);
+        var id = span.attr("id");
         var subIdToDelete = id.substring(id.indexOf("_") + 1);
 
         var deleteUrl = service.deleteUrl;
@@ -265,7 +265,20 @@
         validationEventTriggers: "submit"
     });
 
-    $('a[href*=#]').click(function ()
+    $("a[href=#how_built]").toggle(
+        function ()
+        {
+            $("#information_content").slideDown();
+            $(this).addClass("opened");
+        },
+        function ()
+        {
+            $("#information_content").slideUp();
+            $(this).removeClass("opened");
+        }
+    );
+
+    /*$('a[href*=#]').click(function ()
     {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
         && location.hostname == this.hostname)
@@ -279,7 +292,7 @@
                 return false;
             }
         }
-    });
+    });*/
 
     $("#loading").bind("ajaxSend", function(){
            $(this).show();
