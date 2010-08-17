@@ -179,7 +179,7 @@
 
         if (track.match("^http:\/\/") == null)
         {
-            track = "http://superfeedr.com/track/" + track.replace(" ", "-");
+            track = "http://superfeedr.com/track/" + track.replace(" ", "&");
         }
 
         var subscriptionModel = {
